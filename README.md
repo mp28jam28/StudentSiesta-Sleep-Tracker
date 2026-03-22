@@ -1,50 +1,47 @@
-# Intelligent Trust-Based Cloud Security System
+# __StudentSiesta__: a Smart Sleep Tracker for Students 😴
 
 ## Overview
-Modern cloud systems allow many customers to share the same computing resources, but fixed permissions assume user behavior never changes. In reality, users or services can become risky over time.
+Over 70% of college students are sleep-deprived, getting less than eight hours of sleep each night. Studies, including those at California universities, show about 60% to 80% experience daytime sleepiness or poor sleep quality during the week.
 
-This project proposes an intelligent security system that monitors user and service activity in real time and automatically adjusts access levels. If suspicious behavior is detected, the system can revoke permissions or rotate security keys to protect cloud resources.
+Modern sleep trackers are designed for general use, but how does it truly resolve this health crisis for students? 
 
-A layered access control architecture is used to maintain system availability while minimizing disruption to legitimate users.
+With this project, we propose an intelligent sleep tracker that monitors sleep activity, considering these factors:
+1. **Schedule integration** -- 
+once users input their class schedule in the application, 
+the app flags nights before early classes or exams as high-stakes events
+2. **Exam stress tagging** --
+users can log when they have a midterm or final coming up
+app and access how their sleep degrades in the week before exams
+3. **Sleep debt tracking** — 
+students tend to undersleep during the week and crash on weekends
+students may oversleep on weekends
+4. **Semester-long view** — 
+sleep trends mapped against the academic calendar 
+midterms week, finals week, spring break recovery, work schedule 
 
-- **Layer 1:** Role-Based Access Control (RBAC) ensures users can normally access the resources they are authorized to use.
-- **Layer 2:** Intelligent monitoring analyzes activity and can override permissions if suspicious behavior is detected.
 
-Instead of shutting down entire cloud services during security incidents, the system isolates only the risky account or process so the rest of the cloud environment continues operating normally.
-
-The project will also include simulated attacks to evaluate how effectively the system detects threats and protects the cloud environment.
-
----
 
 ## Project Setup Environment
-The project environment will include a cloud simulation setup using containerized microservices.
+The project environment will be simulated through the Google Cloud system, utilizing its existing services and modules.
 
-Possible tools include:
+### Programming languages
+- **HTML/CSS/Javascript** will cover of the visual elements of the application
+- **Python** will serve as the primary language to support backend logic components
 
-- **Docker** for containerization
-- **Kubernetes** for orchestration (may be used instead of Docker depending on development needs)
 
-### Programming Language
-- **Python** will serve as the primary language due to its strong ecosystem of machine learning and security libraries.
+### Core Cloud Components
+1. Data synchronization
+2. Sleep data is stored in the cloud instead of  static storage
+3. The program will be accessible through mobile devices, laptops, and others
 
-### Core Components
-- Access control models
-- Anomaly detection modules
-- Basic cloud architecture infrastructure
-
----
+### Google Cloud modules
+* Cloud SQL
+* Big Query
+* Cloud Run
+* API: Anthos
 
 ## Project Deliverables
-- Dynamic trust evaluation algorithm  
-- Packet capture analysis (using **Wireshark** / **GNS3**)  
-- Policy enforcement engine  
-- Attack simulation report  
-- Performance and security analysis report  
+- A webpage accessible through any device   
+- Sleep data stored on the cloud, instead of the local machine
+- Unique UI features for users to input their sleep data and school schedule
 
----
-
-## Skills Required
-- **Cloud Architecture** – for designing and configuring the environment  
-- **Python Development** – for machine learning models and backend systems  
-- **Cloud Simulation Tools** – such as Docker or Kubernetes  
-- **Network Security Fundamentals** – to design detection and protection mechanisms  

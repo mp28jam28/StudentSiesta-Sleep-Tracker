@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sleep Tracker</title>
+    <link rel="stylesheet" href="sleep_tracker.css">
+</head>
+<body>
+    <div class="dashboard">
+        <h1>StudentSiesta</h1>
+
+    <div class="weekHeader">
+        <button id="prevWeek">←</button>
+        <h3 id="weekTitle"></h3>
+        <button id="nextWeek">→</button>
+    </div>
+
+    <hr class="divider">
+
+    <h3 id="chartTitle">Hours Slept</h3>
+    <canvas id="sleepChart"></canvas>
+
+    <div id="sleepDataForm" class="form">
+        <div class="formContent">
+            <span id="closeForm" class="close">&times;</span>
+            <form id="sleepData">
+                <label>Date:</label>
+                <input type="date" required>
+                <label>Bedtime:</label>
+                <input type="time" required>
+                <label>Wake Time:</label>
+                <input type="time" required>
+                <label>Quality (1-5):</label>
+                <input type="number" min="1" max="5" required>
+                <button type="submit">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <button id="addDataBtn">Add Sleep Data</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="sleep_tracker.js"></script>
+</body>
+</html>

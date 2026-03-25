@@ -44,7 +44,7 @@ The project environment will be simulated through the Google Cloud system, utili
 - A webpage accessible through any device   
 - Sleep data stored on the cloud, instead of the local machine
 - Unique UI features for users to input their sleep data and school schedule
-<img width="599" height="605" alt="Screenshot 2026-03-23 at 3 15 07 AM" src="https://github.com/user-attachments/assets/bf78cd1e-45dc-4355-9f30-be758bf3f3cf" />
+<img width="759" height="580" alt="Screenshot 2026-03-24 at 5 46 08 PM" src="https://github.com/user-attachments/assets/84271579-9c74-4401-aedd-8d9135471bcd" />
 
   
 

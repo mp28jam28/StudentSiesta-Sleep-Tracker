@@ -9,40 +9,37 @@
         <div class=title>
             <h1>StudentSiesta</h1>
         </div>
-        <a href="homepage.html"><button class="tab">Home</button></a>
+        <a href="homepage.html"><button class="tab active">Home</button></a>
         <a href="log_sleep.html"><button class="tab" id="logTab">Log Sleep</button></a>
         <a href="insights.html"><button class="tab" id="insightsTab">Insights</button></a>
     </nav>
 
-    <div class="weekHeader dashboard">
-        <button id="prevWeek">←</button>
-        <h3 id="weekTitle"></h3>
-        <button id="nextWeek">→</button>
-    </div>
-
-    <hr class="divider">
-
-    <h3 id="chartTitle">Weekly Sleep Pattern</h3>
-    <canvas id="sleepChart"></canvas>
-
-    <div id="sleepDataForm" class="form">
-        <div class="formContent">
-            <span id="closeForm" class="close">&times;</span>
-            <form id="sleepData">
-                <label>Date:</label>
-                <input type="date" required>
-                <label>Bedtime:</label>
-                <input type="time" required>
-                <label>Wake Time:</label>
-                <input type="time" required>
-                <label>Quality (1-5):</label>
-                <input type="number" min="1" max="5" required>
-                <button type="submit">Save</button>
-            </form>
+    <section class="cards">
+        <div class="card">
+            <h4>Sleep Debt</h4>
+            <p class="value" id="sleepDebtValue">-- hrs</p>
         </div>
-    </div>
 
-    <button id="addDataBtn">Add Sleep Data</button>
+        <div class="card">
+            <h4>Weekend Recovery</h4>
+            <p class="value" id="weekendRecoveryValue">-- hrs</p>
+        </div>
+
+        <div class="card">
+            <h4>Chronotype</h4>
+            <p class="value" id="chronotypeValue">--</p>
+        </div>
+    </section>
+
+    <section class="charts">
+        <h4>Weekly Sleep Pattern</h4>
+        <div class="weekHeader">
+            <button id="prevWeek">←</button>
+            <h3 id="weekTitle"></h3>
+            <button id="nextWeek">→</button>
+        </div>
+        <canvas id="sleepChart"></canvas>
+    </section>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="sleep_tracker.js"></script>

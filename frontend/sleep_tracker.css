@@ -4,10 +4,34 @@ body {
     background-position: center;
     background-repeat:repeat;
 }
-.dashboard {
-    max-width: 900px;
-    margin: 20px auto;
+
+.cards {
+    display: flex;
+    gap: 20px;
     padding: 20px;
+}
+
+.card {
+    flex: 1;
+    background: rgb(8, 1, 56);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px white;
+    color: white;
+}
+
+.value {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.charts {
+    margin: 20px;
+    background: rgb(8, 1, 56);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px white;
+    color: white;
 }
 
 .title {
@@ -19,10 +43,12 @@ body {
 
 nav {
     display: flex;
-    gap: 55px;
-    justify-content: center;
     align-items: center;
-    margin-top: 20px;
+}
+
+nav a {
+    margin-left: 30px;
+    text-decoration: none;
 }
 
 h1 {
@@ -31,81 +57,47 @@ h1 {
 }
 
 .tab {
-    background: linear-gradient(9deg, #2a4978, #62dcd4 );
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    background: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
     font-size: 17px;
-   
 } 
 
+.tab.active {
+    background: rgb(28, 17, 101);
+}
+
+.tab:hover {
+    background: rgb(28, 17, 101);
+}
+
 h3 {
-    background: #dbc5a3;
+    background: white;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     font-size: 16px;
     font-weight: lighter;
     text-align: center;
 }
+
+h4 {
+    color: white;
+    margin-top: 5px;
+}
+
 .sleep-logger {
     padding: 20px;
-    background: linear-gradient(2deg, #28445a, #3c3a60);
-    border-radius: 25px;
-    border-color: white;
+    background: rgb(8, 1, 56);
     width: 700px;
     margin: 20px auto;
-}
-
-.weekHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.weekHeader h3 {
-    margin: 0;
-}
-
-.divider {
-    border-top: 1px solid #3B5998;
-}
-
-button {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    background-color: #4169E1;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px white;
     color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #3B5998;
-}
-
-.form {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    justify-content: center;
-    align-items: center;
-}
-
-.formContent {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    width: 300px;
 }
 
 input {
-    width: 90%;
+    width: 100%;
     padding: 10px;
     margin-top: 8px;
     margin-bottom: 10px;
@@ -113,8 +105,32 @@ input {
     border: 1px solid #ccc;
 }
 
-.close {
-    float: right;
+* {
+    box-sizing: border-box;
+}
+
+.weekHeader {
+    display: flex;
+    align-items: center;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.weekHeader h3 {
+    margin: 0;
+}
+
+button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background: linear-gradient(9deg, #de098a, #7e30da);
+    color: white;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
-    font-size: 20px;
+}
+
+button:hover {
+    opacity: 0.85;
 }

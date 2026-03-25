@@ -1,20 +1,15 @@
-const addDataBtn = document.getElementById('addDataBtn');
 const form = document.getElementById('sleepDataForm');
-const closeForm = document.getElementById('closeForm');
 const sleepData = document.getElementById('sleepData');
 
-// open/close form
-addDataBtn.addEventListener('click', () => form.style.display = 'flex');
-closeForm.addEventListener('click', () => form.style.display = 'none');
-window.addEventListener('click', e => { if(e.target == form) form.style.display = 'none'; });
-
 // save data button
-sleepData.addEventListener('submit', function(event){
-    event.preventDefault();
+if (sleepData) {
+    sleepData.addEventListener('submit', function(event){
+        event.preventDefault();
 
-    form.style.display = 'none';
-    sleepData.reset();
-});
+        form.style.display = 'none';
+        sleepData.reset();
+    });
+}
 
 let currentWeekOffset = 0;
 let chart;
@@ -59,7 +54,8 @@ function updateChart()
             labels: labels,
             datasets: [{
                 data: hoursSlept,
-                tension: 0
+                tension: 0,
+                fill: true
             }]
         },
         options: {
@@ -70,7 +66,26 @@ function updateChart()
             },
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Hours Slept',
+                        color: 'white'
+                    },
+                    ticks: {
+                        color: 'white'
+                    },
+                    grid: {
+                        color: 'rgba(255,255,255,0.2)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: 'white'
+                    },
+                    grid: {
+                        color: 'rgba(255,255,255,0.1)'
+                    }
                 }
             }
         }

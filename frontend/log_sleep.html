@@ -10,20 +10,27 @@
             <h1>StudentSiesta</h1>
         </div>
         <a href="homepage.html"><button class="tab">Home</button></a>
-        <a href="log_sleep.html"><button class="tab" id="logTab">Log Sleep</button></a>
+        <a href="log_sleep.html"><button class="tab active" id="logTab">Log Sleep</button></a>
         <a href="insights.html"><button class="tab" id="insightsTab">Insights</button></a>
      </nav>
 
     <h3>Track your sleep to identify patterns and improve your wellness</h3>
-    <div class="sleep-logger">
-        <h3>Sleep Hours</h3>
-        <h3>When did you go to bed?</h3>
-        <input type="time" id="bedtime">
-        
-        <h3>When did you wake up?</h3>
-        <input type="time" id="wakeTime">
-        
-        <button>Log Sleep</button>
+    <div id="sleepDataForm" class="sleep-logger">
+        <form id="sleepData">
+            <h3>What date are you logging for?</h3>
+            <input type="date" id="sleepDate" required>
+
+            <h3>When did you go to bed?</h3>
+            <input type="time" id="bedtime" required>
+            
+            <h3>When did you wake up?</h3>
+            <input type="time" id="wakeTime" required>
+
+            <h3>How would you rate your sleep quality?</h3>
+            <input type="number" id="quality" min="1" max="5" required>
+            
+            <button type="submit">Log Sleep</button>
+        </form>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="sleep_tracker.js"></script>

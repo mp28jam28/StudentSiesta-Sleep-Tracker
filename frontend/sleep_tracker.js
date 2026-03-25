@@ -76,7 +76,6 @@ function updateChart()
         }
     });
 }
-
 // buttons to navigate between weeks
 document.getElementById("prevWeek").addEventListener("click", () => {
     currentWeekOffset--;

@@ -1,7 +1,8 @@
 
 # Load environment variables from the .env file
 # We use environment variables instead of hardcoding database credentials
-# We do this for security/standard practice since we are pushing these things to github(which may or may not be public)
+# We do this for security/standard practice since we are pushing these 
+# things to github(which may or may not be public)
 
 from dotenv import load_dotenv
 import os

@@ -9,9 +9,9 @@
         <div class=title>
             <h1>StudentSiesta</h1>
         </div>
-        <h2>Home</h2>
-        <h2>Log Sleep</h2>
-        <h2>Insights</h2>
+        <a href="homepage.html"><button class="tab">Home</button></a>
+        <a href="log_sleep.html"><button class="tab" id="logTab">Log Sleep</button></a>
+        <a href="insights.html"><button class="tab" id="insightsTab">Insights</button></a>
     </nav>
 
     <div class="weekHeader dashboard">
@@ -22,7 +22,7 @@
 
     <hr class="divider">
 
-    <h3 id="chartTitle">Hours Slept</h3>
+    <h3 id="chartTitle">Weekly Sleep Pattern</h3>
     <canvas id="sleepChart"></canvas>
 
     <div id="sleepDataForm" class="form">

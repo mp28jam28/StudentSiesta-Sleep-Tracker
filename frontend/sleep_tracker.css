@@ -1,9 +1,9 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f6f8;
-    margin: 0;
+    background-image: url('stars-in-sky-dark-2732x2732-15485.jpg');
+    background-size: cover; 
+    background-position: center;
+    background-repeat:repeat;
 }
-
 .dashboard {
     max-width: 900px;
     margin: 20px auto;
@@ -17,24 +17,42 @@ body {
     font-size: 24px;
 }
 
-nav{
+nav {
     display: flex;
     gap: 55px;
     justify-content: center;
     align-items: center;
-    border-color: #4169E1;
-
+    margin-top: 20px;
 }
 
 h1 {
     font-size: 24px;
+    margin-left: 30px;
 }
 
-h2 {
+.tab {
     background: linear-gradient(9deg, #2a4978, #62dcd4 );
     background-clip: text;
     -webkit-text-fill-color: transparent;
     font-size: 17px;
+   
+} 
+
+h3 {
+    background: #dbc5a3;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 16px;
+    font-weight: lighter;
+    text-align: center;
+}
+.sleep-logger {
+    padding: 20px;
+    background: linear-gradient(2deg, #28445a, #3c3a60);
+    border-radius: 25px;
+    border-color: white;
+    width: 700px;
+    margin: 20px auto;
 }
 
 .weekHeader {
@@ -50,11 +68,6 @@ h2 {
 
 .divider {
     border-top: 1px solid #3B5998;
-}
-
-h3 {
-    text-align: center;
-    margin-bottom: 10px;
 }
 
 button {

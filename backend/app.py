@@ -4,19 +4,27 @@
 # We do this for security/standard practice since we are pushing these 
 # things to github(which may or may not be public)
 
-from flask import Flask, request, jsonify
 from datetime import datetime, timedelta
 from db import get_db_connection
 from flask_cors import CORS
+from google.oauth2 import id_token
+from google.auth.transport import requests as grequests
+from flask import Flask, request, jsonify, session
+
 
 app = Flask(__name__)
-CORS(app)
+app.secret_key = "studentprojectval"
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+
+GOOGLE_CLIENT_ID = "782546214154-h0hfh6hok20k3vk839hm2b0j2p29r7vr.apps.googleusercontent.com"
+CORS(app, supports_credentials= True)
 
 def calculate_duration_hours(bedtime_str, wake_time_str):
     bedtime = datetime.strptime(bedtime_str, "%H:%M")
     wake_time = datetime.strptime(wake_time_str, "%H:%M")
 
-    # Handle overnight sleep, e.g. 23:30 to 07:15
+    
     if wake_time <= bedtime:
         wake_time += timedelta(days=1)
 
@@ -96,6 +104,54 @@ def get_sleep_data():
     except Exception as e:
         print("ERROR IN /sleep_data:", e)
         return jsonify({"error": str(e)}), 500
+
+
+
+@app.route("/google-login", methods=["POST"])
+def google_login():
+    data = request.get_json()
+    credential = data.get("credential")
+
+    if not credential:
+        return jsonify({"error": "Missing credential"}), 400
+
+    try:
+        idinfo = id_token.verify_oauth2_token(
+            credential,
+            grequests.Request(),
+            GOOGLE_CLIENT_ID
+        )
+
+        email = idinfo.get("email")
+        name = idinfo.get("name")
+        sub = idinfo.get("sub")
+
+        session["user"] = {
+            "email": email,
+            "name": name,
+            "google_id": sub
+        }
+
+        return jsonify({
+            "message": "Login successful",
+            "email": email,
+            "name": name
+        }), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 401
+    
+@app.route("/me", methods=["GET"])
+def me():
+    user = session.get("user")
+    if not user:
+        return jsonify({"error": "Not logged in"}), 401
+    return jsonify(user), 200
+
+@app.route("/logout", methods=["POST"])
+def logout():
+    session.pop("user", None)
+    return jsonify({"message": "Logged out"}), 200
 
 if __name__ == "__main__":
     app.run(debug=True)

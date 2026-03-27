@@ -83,34 +83,40 @@
 
 
 <script>
+async function handleCredentialResponse(response) {
 
-function handleCredentialResponse(response) {
+    try {
 
-    console.log("Encoded JWT ID token: " + response.credential);
+        const res = await fetch("http://127.0.0.1:5000/google-login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                credential: response.credential
+            })
+        });
 
-    const user = parseJwt(response.credential);
+        const result = await res.json();
 
-    console.log("User email:", user.email);
-    console.log("User name:", user.name);
+        if (!res.ok) {
+            throw new Error(result.error || "Google login failed");
+        }
 
-    alert("Logged in as " + user.email);
+        alert("Logged in as " + result.email);
+
+        // redirect after login
+        window.location.href = "homepage.html";
+
+    } catch (err) {
+
+        console.error(err);
+        alert("Login error: " + err.message);
+
+    }
 
 }
-
-function parseJwt(token) {
-
-    const base64Url = token.split('.')[1];
-
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-
-    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-
-    return JSON.parse(jsonPayload);
-
-}
-
 </script>
 
 </body>

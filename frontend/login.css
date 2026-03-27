@@ -1,13 +1,10 @@
-
 .login-wrapper {
   display: flex;
   justify-content: center;
-  
 }
 
 form {
   width: 420px;
-  border: 3px solid #f1f1f1;
   background: rgb(8, 1, 56);
   color: white;
   border-radius: 12px;
@@ -17,34 +14,16 @@ form {
 
 input[type=text],
 input[type=password] {
-  width: 100%;
   padding: 12px 20px;
   margin: 8px 0 16px 0;
   display: inline-block;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  border-radius: 8px;
 }
 
-button {
-  background: linear-gradient(9deg, #de098a, #7e30da);
-  color: white;
+form button {
   padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  cursor: pointer;
+  margin: 8px 0 10px 0;
   width: 100%;
   border-radius: 8px;
-}
-
-button:hover {
-  opacity: 0.85;
-}
-
-.cancelbtn {
-  width: auto;
-  padding: 10px 18px;
-  background-color: #f44336;
 }
 
 .imgcontainer {
@@ -62,16 +41,26 @@ img.avatar {
 }
 
 .bottom-container {
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: rgb(8, 1, 56);
+  padding-top: 0;
 }
 
 span.psw {
   float: right;
-  padding-top: 16px;
+  padding-top: 8px;
 }
 
 label {
   color: white;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+input[type="checkbox"] {
+    width: auto;
+    margin-left: 30px;
+    transform: translateY(2px);
 }
 
 .psw a {
@@ -90,7 +79,7 @@ label {
   span.psw {
     display: block;
     float: none;
-    margin-top: 10px;
+    margin-top: 8px;
   }
 
   .cancelbtn {
@@ -99,15 +88,15 @@ label {
 }
 
 .login-container{
-    display: flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 40px;
+  margin-top: 20px;
 }
 
 .google-login{
-    display: flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 40px;
+  margin-top: 20px;
 }

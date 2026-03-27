@@ -52,6 +52,11 @@ nav a {
     text-decoration: none;
 }
 
+nav a:last-child {
+    margin-left: auto;
+    margin-right: 20px;
+}
+
 h1 {
     font-size: 24px;
     margin-left: 30px;
@@ -78,7 +83,6 @@ h3 {
     background-clip: text;
     -webkit-text-fill-color: transparent;
     font-size: 16px;
-    font-weight: lighter;
     text-align: center;
 }
 
@@ -134,13 +138,4 @@ button {
 
 button:hover {
     opacity: 0.85;
-}
-
-nav {
-    display: flex;
-    align-items: center;
-}
-
-nav a:last-child {
-    margin-left: auto;
 }

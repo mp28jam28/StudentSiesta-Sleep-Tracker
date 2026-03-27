@@ -1,123 +1,108 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login - StudentSiesta</title>
-
+    <title>StudentSiesta - Login</title>
     <link rel="stylesheet" href="sleep_tracker.css">
     <link rel="stylesheet" href="login.css">
-
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
-
 <body>
+    <nav>
+        <div class="title">
+            <h1>StudentSiesta</h1>
+        </div>
+        <a href="homepage.html"><button class="tab">Home</button></a>
+        <a href="log_sleep.html"><button class="tab">Log Sleep</button></a>
+        <a href="schedule.html"><button class="tab">Schedule</button></a>
+        <a href="insights.html"><button class="tab">Insights</button></a>
+        <a href="login.html"><button class="tab active">Login</button></a>
+    </nav>
 
-<nav>
-    <div class="title">
-        <h1>StudentSiesta</h1>
-    </div>
+    <div class="login-container">
+        <div class="login-wrapper">
+            <form id="loginForm">
+                <div class="imgcontainer">
+                    <img src="img_avatar2.png" alt="Avatar" class="avatar">
+                </div>
 
-    <a href="homepage.html"><button class="tab">Home</button></a>
-    <a href="log_sleep.html"><button class="tab">Log Sleep</button></a>
-    <a href="insights.html"><button class="tab">Insights</button></a>
-    <a href="login.html"><button class="tab active">Login</button></a>
-</nav>
+                <div class="container">
+                    <label for="uname"><b>Username</b></label>
+                    <input type="text" id="uname" name="uname" placeholder="Enter Username" required>
 
+                    <label for="psw"><b>Password</b></label>
+                    <input type="password" id="psw" name="psw" placeholder="Enter Password" required>
 
+                    <button type="submit">Login</button>
 
-<div class="login-container">
+                    <label>
+                        Remember me
+                        <input type="checkbox" checked="checked" name="remember">
+                    </label>
+                </div>
 
-    
-    <div class="login-wrapper">
-        <form id="loginForm">
-
-            <div class="imgcontainer">
-                <img src="img_avatar2.png" alt="Avatar" class="avatar">
-            </div>
-
-            <div class="container">
-                <label for="uname"><b>Username</b></label>
-                <input type="text" id="uname" name="uname" placeholder="Enter Username" required>
-
-                <label for="psw"><b>Password</b></label>
-                <input type="password" id="psw" name="psw" placeholder="Enter Password" required>
-
-                <button type="submit">Login</button>
-
-                <label>
-                    <input type="checkbox" checked="checked" name="remember"> Remember me
-                </label>
-            </div>
-
-            <div class="container bottom-container">
-                <button type="button" class="cancelbtn">Cancel</button>
-                <span class="psw">Forgot <a href="#">password?</a></span>
-            </div>
-
-        </form>
-    </div>
-
-
-    
-    <div class="google-login">
-
-        <p style="color:white;">OR</p>
-
-        <div id="g_id_onload"
-             data-client_id="782546214154-h0hfh6hok20k3vk839hm2b0j2p29r7vr.apps.googleusercontent.com"
-             data-context="signin"
-             data-ux_mode="popup"
-             data-callback="handleCredentialResponse">
+                <div class="container bottom-container">
+                    <button type="button" class="cancelbtn">Cancel</button>
+                    <span class="psw">Forgot <a href="#">password?</a></span>
+                </div>
+            </form>
         </div>
 
-        <div class="g_id_signin"
-             data-type="standard"
-             data-size="large"
-             data-theme="outline"
-             data-text="signin_with"
-             data-shape="rectangular">
-        </div>
+        <div class="google-login">
 
+            <p style="color:white;">OR</p>
+
+            <div id="g_id_onload"
+                data-client_id="782546214154-h0hfh6hok20k3vk839hm2b0j2p29r7vr.apps.googleusercontent.com"
+                data-context="signin"
+                data-ux_mode="popup"
+                data-callback="handleCredentialResponse">
+            </div>
+
+            <div class="g_id_signin"
+                data-type="standard"
+                data-size="large"
+                data-theme="outline"
+                data-text="signin_with"
+                data-shape="rectangular">
+            </div>
+        </div>
     </div>
 
-</div>
+    <script>
+    async function handleCredentialResponse(response) {
 
+        try {
 
-<script>
-async function handleCredentialResponse(response) {
+            const res = await fetch("http://127.0.0.1:5000/google-login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    credential: response.credential
+                })
+            });
 
-    try {
+            const result = await res.json();
 
-        const res = await fetch("http://127.0.0.1:5000/google-login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            credentials: "include",
-            body: JSON.stringify({
-                credential: response.credential
-            })
-        });
+            if (!res.ok) {
+                throw new Error(result.error || "Google login failed");
+            }
 
-        const result = await res.json();
+            alert("Logged in as " + result.email);
 
-        if (!res.ok) {
-            throw new Error(result.error || "Google login failed");
+            // redirect after login
+            window.location.href = "homepage.html";
+
+        } catch (err) {
+
+            console.error(err);
+            alert("Login error: " + err.message);
+
         }
 
-        alert("Logged in as " + result.email);
-
-        // redirect after login
-        window.location.href = "homepage.html";
-
-    } catch (err) {
-
-        console.error(err);
-        alert("Login error: " + err.message);
-
     }
-
-}
-</script>
-
+    </script>
 </body>
 </html>

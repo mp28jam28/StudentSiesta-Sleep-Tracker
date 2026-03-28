@@ -37,6 +37,13 @@ def home():
 
 @app.route("/add_sleep", methods=["POST"])
 def add_sleep():
+
+    user = session.get("user")
+    if not user:
+        return jsonify({"error": "Not logged in"}), 401
+
+    user_email = user["email"]
+
     data = request.get_json()
 
     date = data.get("date")
@@ -54,10 +61,12 @@ def add_sleep():
         cursor = connection.cursor()
 
         query = """
-        INSERT INTO sleep_data (date, bedtime, wake_time, duration_hours, quality_rating)
-        VALUES (%s, %s, %s, %s, %s)
+        INSERT INTO sleep_data (user_email,date, bedtime, wake_time, duration_hours, quality_rating)
+        VALUES (%s, %s, %s, %s, %s,%s)
         """
-        values = (date, bedtime, wake_time, duration_hours, quality_rating)
+        values = (user_email,date, bedtime, wake_time, duration_hours, quality_rating)
+        print("LOGGED IN USER:", user_email)
+        print("VALUES BEING INSERTED:", values)
 
         cursor.execute(query, values)
         connection.commit()
@@ -75,15 +84,24 @@ def add_sleep():
 
 @app.route("/sleep_data", methods=["GET"])
 def get_sleep_data():
+    user = session.get("user")
+    if not user:
+        return jsonify({"error": "Not logged in"}), 401
+
+    user_email = user["email"]
+
+
     try:
+    
         connection = get_db_connection()
         cursor = connection.cursor(dictionary=True)
 
         cursor.execute("""
             SELECT date, bedtime, wake_time, duration_hours, quality_rating
             FROM sleep_data
+            WHERE user_email = %s
             ORDER BY date ASC
-        """)
+        """,(user_email,))
         rows = cursor.fetchall()
 
         cleaned_rows = []

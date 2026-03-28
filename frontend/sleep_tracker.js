@@ -23,6 +23,7 @@ if (sleepData) {
                 headers: {
                     "Content-Type": "application/json"
                 },
+                credentials:"include",
                 body: JSON.stringify(payload)
             });
 
@@ -85,7 +86,9 @@ async function updateChart() {
 
     try {
         console.time("chartFetch");
-        const response = await fetch("http://127.0.0.1:5000/sleep_data");
+        const response = await fetch("http://127.0.0.1:5000/sleep_data",{
+            credentials:"include"
+        });
         console.timeEnd("chartFetch");
 
         if (!response.ok) {

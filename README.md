@@ -20,9 +20,11 @@ sleep trends mapped against the academic calendar
 midterms week, finals week, spring break recovery, work schedule 
 
 
-
 ## Project Setup Environment
 The project environment will be simulated through the Google Cloud system, utilizing its existing services and modules.
+
+To run it locally, first install the required dependencies by running this command in the terminal.
+`bash pip install -r requirements.txt`
 
 ### Programming languages
 - **HTML/CSS/Javascript** will cover of the visual elements of the application

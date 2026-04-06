@@ -67,6 +67,25 @@ input[type="checkbox"] {
   color: #ffb6ff;
 }
 
+.account-exists{
+  color: white;
+  margin-top: 50px;
+  margin-left: 185px;
+}
+.create-account{
+  margin-left: 120px;
+  font-size: 25px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.sign-in{
+  margin-left: 170px;
+  font-size: 25px;
+  margin-top: 30px;
+  
+}
+
 @media screen and (max-width: 500px) {
   .login-wrapper {
     padding: 0 16px;

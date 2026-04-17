@@ -17,14 +17,14 @@
     </nav>
 
      <div id="sleep-goal-setter" class="goal-setter">
-        <h3>Sleep Goal Settings</h3>
-
-            <div>Set your target sleep</div>
+        <h3>Daily Sleep Goal</h3>
+            <div class="goal-description">Set your target sleep duration.</div>
             <div class="scroll-container" id="sleepGoal">
-                <input type="range" min="2" max="17" value="5" step="0.5">
-                <div class="preferred-hours" id="goal-value">Hours</div>
+                <input type="range" id="sleepGoalInput" min="5" max="12" value="8.5" step="0.5">
+                <div class="preferred-hours" id="goal-value">8.5 Hours</div>
             </div>
         <button type="submit">Set Goal</button>
+        <p id="statusMessage"></p>
 
     </div>        
         <p id="statusMessage"></p>

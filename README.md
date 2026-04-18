@@ -46,7 +46,21 @@ To run it locally, first install the required dependencies by running this comma
 - A webpage accessible through any device   
 - Sleep data stored on the cloud, instead of the local machine
 - Unique UI features for users to input their sleep data and school schedule
-<img width="759" height="580" alt="Screenshot 2026-03-24 at 5 46 08 PM" src="https://github.com/user-attachments/assets/84271579-9c74-4401-aedd-8d9135471bcd" />
+
+## Log Sleep Page
+<img width="955" height="784" alt="Screenshot 2026-04-18 at 2 44 20 AM" src="https://github.com/user-attachments/assets/e995100b-f373-46c6-9af3-e36ea18da8f4" />
+
+## Schedule Page
+<img width="885" height="784" alt="Screenshot 2026-04-18 at 2 49 24 AM" src="https://github.com/user-attachments/assets/4a5966fc-b1bf-439e-a56f-5c6ad78fcc40" />
+
+<img width="885" height="722" alt="Screenshot 2026-04-18 at 2 47 57 AM" src="https://github.com/user-attachments/assets/10197c95-5e86-4181-893e-13269480d4bf" />
+
+## Insights Page
+- Users can set and adjust their sleep goals here
+- Sleep suggestions are generated according to user's sleep habits
+<img width="885" height="741" alt="Screenshot 2026-04-18 at 2 50 38 AM" src="https://github.com/user-attachments/assets/e0ce3c6f-032c-4370-8377-65e644dfe05d" />
+
+
 
   
 

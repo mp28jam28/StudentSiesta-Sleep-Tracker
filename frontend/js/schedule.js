@@ -93,3 +93,17 @@ document.getElementById("nextMonth").addEventListener("click", () => {
 
 // Initial render
 renderCalendar(currentMonth, currentYear);
+
+// Day toggle buttons
+document.querySelectorAll(".day-btn").forEach(btn => {
+    btn.addEventListener("click", () => btn.classList.toggle("selected"));
+});
+
+// Add Class form
+document.getElementById("addClasses").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const className = e.target.querySelector("input[type='text']").value.trim();
+    const msg = document.getElementById("classAddedMsg");
+    msg.textContent = `${className || "Class"} got added to Calendar!`;
+    msg.style.display = "block";
+});

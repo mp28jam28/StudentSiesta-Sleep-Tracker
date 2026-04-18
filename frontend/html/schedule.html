@@ -46,25 +46,36 @@
         <div class="tab-content" id="classesTab">
             <div class="class-container">
                 <div class="class-header">
-                    <div>
-                    <h3>Class Schedule 🗓️</h3></div>
-                    <div class="add-classes-description">Add your weekly classes to track nights before early classes</div>
+                    <h3>Class Schedule 🗓️</h3>
                 </div>
-                <form id="addClasses">
-                    <!-- <h3>What date are you logging for?</h3>
-                    <input type="date" id="sleepDate" required>
-
-                    <h3>When did you go to bed?</h3>
-                    <input type="time" id="bedtime" required>
-                    
-                    <h3>When did you wake up?</h3>
-                    <input type="time" id="wakeTime" required>
-
-                    <h3>How would you rate your sleep quality?</h3>
-                    <input type="number" id="quality" min="1" max="5" required>
-                    
-                    <button type="submit">Log Sleep</button> -->
-                </form>
+                    <div class="add-classes-description">Add your weekly classes to track nights before early classes</div>
+                    <form id="addClasses" class="addClasses">
+                        <div class="class-fields-row">
+                            <div class="class-field">
+                                <label>Class Name</label>
+                                <input type="text" placeholder="e.g., Calculus II" required>
+                            </div>
+                            <div class="class-field">
+                                <label>Day(s)</label>
+                                <div class="day-toggles">
+                                    <button type="button" class="day-btn" data-day="Mon">M</button>
+                                    <button type="button" class="day-btn" data-day="Tue">T</button>
+                                    <button type="button" class="day-btn" data-day="Wed">W</button>
+                                    <button type="button" class="day-btn" data-day="Thu">Th</button>
+                                    <button type="button" class="day-btn" data-day="Fri">F</button>
+                                    <button type="button" class="day-btn" data-day="Sat">Sa</button>
+                                    <button type="button" class="day-btn" data-day="Sun">Su</button>
+                                </div>
+                            </div>
+                            <div class="class-field">
+                                <label>Time</label>
+                                <input type="time" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="add-class-btn">+ Add Class</button>
+                        <div id="classAddedMsg" class="class-added-msg" style="display:none;"></div>
+                    </form>
+                </div>
             </div>
         </div>
 

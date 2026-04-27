@@ -107,3 +107,16 @@ document.getElementById("addClasses").addEventListener("submit", (e) => {
     msg.textContent = `${className || "Class"} got added to Calendar!`;
     msg.style.display = "block";
 });
+
+// Add Exam form
+document.getElementById("addExams").addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const examName = e.target.elements.examName.value.trim();
+    const examDate = e.target.elements.examDate.value;
+    const examType = e.target.querySelector("input[name='examType']:checked")?.value;
+
+    const msg = document.getElementById("examAddedMsg");
+    msg.textContent = `${examName || "Exam"} got added to Calendar!`;
+    msg.style.display = "block";
+});

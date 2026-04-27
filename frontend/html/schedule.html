@@ -24,7 +24,7 @@
             <button class="tab" data-target="examsTab">Add Exams</button>
         </div>
 
-        <div class="tab-content" id="calendarTab">
+        <div class="tab-content active" id="calendarTab">
             <div class="calendar-container">
                 <div class="calendar-header">
                     <button id="prevMonth">←</button>
@@ -46,7 +46,7 @@
         <div class="tab-content" id="classesTab">
             <div class="class-container">
                 <div class="class-header">
-                    <h3>Class Schedule 🗓️</h3>
+                    <h3>Class Schedule</h3>
                 </div>
                     <div class="add-classes-description">Add your weekly classes to track nights before early classes</div>
                     <form id="addClasses" class="addClasses">
@@ -80,6 +80,37 @@
         </div>
 
         <div class="tab-content" id="examsTab">
+            <div class="exams-container">
+                <div class="exams-header">
+                    <h3>Upcoming Exams</h3>
+                </div>
+                    <div class="add-exams-description">Log your exams to track sleep pattern changes during high-stress periods</div>
+                    <form id="addExams" class="addExams">
+                        <div class="exam-fields-row">
+                            <div class="exam-field">
+                                <label>Exam Name</label>
+                                <input type="text" name="examName" placeholder="e.g., Calculus Midterm" required>
+                            </div>
+                            <div class="exam-field">
+                                <label>Date</label>
+                                <input type="date" name="examDate" required>
+                            </div>
+                        </div>
+                        <div class="exam-fields-row">
+                            <div class="exam-field">
+                                <input type="radio" id="midterm" name="examType" value="Midterm" required>
+                                <label for="midterm" class="type-btn">Midterm</label>
+                            </div>
+                            <div class="exam-field">
+                                <input type="radio" id="final" name="examType" value="Final" required>
+                                <label for="final" class="type-btn">Final</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="add-exam-btn">+ Add Exam</button>
+                        <div id="examAddedMsg" class="exam-added-msg" style="display:none;"></div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 

@@ -17,6 +17,14 @@
     background: rgb(28,17,101);
 }
 
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
 .calendar-container{
     margin: 20px;
     background: rgb(8, 1, 56);
@@ -25,7 +33,18 @@
     box-shadow: 0 4px 10px white;
     padding: 20px;
 }
+
 .class-container {
+    padding: 20px;
+    background: rgb(8, 1, 56);
+    width: 700px;
+    margin: 20px auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px white;
+    color: white;
+}
+
+.exams-container {
     padding: 20px;
     background: rgb(8, 1, 56);
     width: 700px;
@@ -45,6 +64,14 @@
     font-size: 11px;
 }
 
+.addExams {
+    background: #260161;
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    margin: 16px 0;
+    font-size: 11px;
+}
 
 .calendar-header {
     display: flex;
@@ -107,6 +134,7 @@
     font-size: 14px;
     width: 100%;
     box-sizing: border-box;
+    height: 35px;
 }
 
 .class-field input::placeholder {
@@ -148,6 +176,82 @@
 }
 
 .day-btn.selected {
+    background: #4a2dbd;
+    color: white;
+}
+
+.add-exams-description {
+    color: #aaa;
+    font-size: 14px;
+    margin-left: 150px;
+}
+
+.exam-fields-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 6px;
+}
+
+.exam-field {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 6px;
+    text-align: left;
+}
+
+.exam-field label {
+    font-size: 13px;
+    color: #ccc;
+}
+
+.exam-field input {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    background: #aaa;
+    color: #222;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+    height: 35px;
+}
+
+.exam-field input::placeholder {
+    color: #555;
+}
+
+.add-exam-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #f5f0ff;
+    color: #222;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.exam-added-msg {
+    margin-top: 12px;
+    font-size: 14px;
+    color: #cce8cc;
+    text-align: center;
+}
+
+.exam-field input[type="radio"] {
+    display: none;
+}
+
+.exam-field .type-btn {
+    padding: 8px 16px;
+    background: #aaa;
+    color: #222;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.exam-field input[type="radio"]:checked + .type-btn {
     background: #4a2dbd;
     color: white;
 }

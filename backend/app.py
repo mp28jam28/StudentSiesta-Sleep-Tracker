@@ -17,7 +17,7 @@ app.secret_key = "studentprojectval"
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 
-GOOGLE_CLIENT_ID = "782546214154-h0hfh6hok20k3vk839hm2b0j2p29r7vr.apps.googleusercontent.com"
+GOOGLE_CLIENT_ID = "1036286878464-5v0om0r4rcgov918sn18q5l61dd1nka1.apps.googleusercontent.com"
 CORS(app, supports_credentials= True)
 
 def calculate_duration_hours(bedtime_str, wake_time_str):

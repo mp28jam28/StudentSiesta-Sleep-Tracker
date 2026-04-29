@@ -58,13 +58,19 @@ def add_sleep():
 
         connection = get_db_connection()
         cursor = connection.cursor()
-
         query = """
-        INSERT INTO Sleep_Log (user_id, log_date, sleep_time, wake_time, duration_hours)
-        VALUES (%s, %s, %s, %s, %s)
-        """
+          INSERT INTO Sleep_Log (user_id, sleep_time, wake_time, duration_hours, log_time)
+          VALUES (%s, %s, %s, %s, NOW())
+          """
 
-        values = (user_id, date, bedtime, wake_time, duration_hours)
+
+        sleep_dt = datetime.strptime(f"{date} {bedtime}", "%Y-%m-%d %H:%M")
+        wake_dt = datetime.strptime(f"{date} {wake_time}", "%Y-%m-%d %H:%M")
+
+        if wake_dt <= sleep_dt:
+         wake_dt += timedelta(days=1)
+
+        values = (user_id, sleep_dt, wake_dt, duration_hours)
 
         print("LOGGED IN USER ID:", user_id)
         print("VALUES BEING INSERTED:", values)
@@ -96,10 +102,10 @@ def get_sleep_data():
         cursor = connection.cursor(dictionary=True)
 
         cursor.execute("""
-            SELECT log_date, sleep_time, wake_time, duration_hours
+            SELECT sleep_time, wake_time, duration_hours
             FROM Sleep_Log
             WHERE user_id = %s
-            ORDER BY log_date ASC
+            ORDER BY sleep_time ASC
         """, (user_id,))
 
         rows = cursor.fetchall()
@@ -107,9 +113,9 @@ def get_sleep_data():
         cleaned_rows = []
         for row in rows:
             cleaned_rows.append({
-                "date": str(row["log_date"]),
-                "bedtime": str(row["sleep_time"]),
-                "wake_time": str(row["wake_time"]),
+                "date": row["sleep_time"].strftime("%Y-%m-%d"),
+                "bedtime": row["sleep_time"].strftime("%H:%M"),
+                "wake_time": row["wake_time"].strftime("%H:%M"),
                 "duration_hours": float(row["duration_hours"])
             })
 

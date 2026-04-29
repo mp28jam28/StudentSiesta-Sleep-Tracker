@@ -101,11 +101,21 @@ async function updateChart() {
         sleepEntries = [];
     }
 
-    const hoursSlept = weekDates.map(d => {
-        const yyyyMmDd = d.toISOString().split("T")[0];
-        const entry = sleepEntries.find(item => String(item.date).split("T")[0] === yyyyMmDd);
-        return entry ? entry.duration_hours : null;
+   const hoursSlept = weekDates.map(d => {
+    const yyyyMmDd = d.toLocaleDateString("en-CA");
+
+    const entriesForDay = sleepEntries.filter(item => {
+        return String(item.date).split("T")[0] === yyyyMmDd;
     });
+
+    if (entriesForDay.length === 0) {
+        return null;
+    }
+
+    // !!! If multiple sleep logs exist for the same day,
+    // use the most recent one returned from the backend
+    return entriesForDay[entriesForDay.length - 1].duration_hours;
+});
 
     const weekTitle = document.getElementById("weekTitle");
     if (weekTitle) {

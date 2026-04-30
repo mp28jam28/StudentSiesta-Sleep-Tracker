@@ -11,19 +11,21 @@ from google.oauth2 import id_token
 from google.auth.transport import requests as grequests
 from flask import Flask, request, jsonify, session, render_template
 from schema import Schema
-from calculation import calculateChronotype
+from calculation.chronotype import calculate_chronotype
+from calculation.duration import calculate_duration_hours
+
 from werkzeug.security import generate_password_hash
 from dotenv import load_dotenv
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
 load_dotenv()
+BASE = os.path.dirname(__file__)
+app = Flask(__name__, 
+            template_folder=os.path.join(BASE, "../frontend/html"),
+              static_folder=os.path.join(BASE, "../frontend"),                                                                                           
+              static_url_path="/frontend")
 
-app = Flask(
-    __name__,
-    template_folder="../frontend/html",
-    static_folder="../frontend",
-    static_url_path=""
-)
+app = Flask(__name__, template_folder="../frontend/html", static_folder="../frontend/css")
 app.secret_key = os.getenv("APP_SECRET_KEY")
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_HTTPONLY"] = True
@@ -31,16 +33,6 @@ app.config["SESSION_COOKIE_HTTPONLY"] = True
 GOOGLE_CLIENT_ID = "1036286878464-5v0om0r4rcgov918sn18q5l61dd1nka1.apps.googleusercontent.com"
 CORS(app, supports_credentials= True)
 
-# ---- Amount of time user has slept in one night ----
-def calculate_duration_hours(bedtime_str, wake_time_str):
-    bedtime = datetime.strptime(bedtime_str, "%H:%M")
-    wake_time = datetime.strptime(wake_time_str, "%H:%M")
-
-    if wake_time <= bedtime:
-        wake_time += timedelta(days=1)
-
-    duration = wake_time - bedtime
-    return round(duration.total_seconds() / 3600, 2)
 
 # ---- GET Chronotype ----#
 @app.route("/get_chronotype")
@@ -49,10 +41,9 @@ def get_chronotype():
     if not user: # If no user is logged in
         return jsonify({"error": "No user is currently logged in"}), 401
     
-    result = calculateChronotype(user["user_id"])
+    result = calculate_chronotype(user["user_id"])
     return jsonify({"chronotype": result})
     
-
 # ---- Home Page ----
 @app.route("/")
 def home():
@@ -113,11 +104,17 @@ def add_sleep():
         cursor = connection.cursor()
 
         query = """
-            INSERT INTO Sleep_Log (user_id, sleep_time, wake_time, duration_hours, log_date)
-            VALUES (%s, %s, %s, %s, %s)
-        """
+          INSERT INTO Sleep_Log (user_id, sleep_time, wake_time, duration_hours, log_date)
+          VALUES (%s, %s, %s, %s, %s)
+          """
 
-        values = (user_id, bedtime, wake_time, duration_hours, date)
+        sleep_dt = datetime.strptime(f"{date} {bedtime}", "%Y-%m-%d %H:%M")
+        wake_dt = datetime.strptime(f"{date} {wake_time}", "%Y-%m-%d %H:%M")
+
+        if wake_dt <= sleep_dt:
+            wake_dt += timedelta(days=1)
+
+        values = (user_id, sleep_dt, wake_dt, duration_hours, date)
 
         print("LOGGED IN USER ID:", user_id)
         print("VALUES BEING INSERTED:", values)
@@ -151,7 +148,7 @@ def get_sleep_data():
         cursor = connection.cursor(dictionary=True)
 
         cursor.execute("""
-            SELECT log_date, sleep_time, wake_time, duration_hours
+            SELECT log_date, log_date, sleep_time, wake_time, duration_hours
             FROM Sleep_Log
             WHERE user_id = %s
             ORDER BY log_date ASC
@@ -159,9 +156,18 @@ def get_sleep_data():
 
         rows = cursor.fetchall()
 
+        def timedelta_to_hhmm(td):
+            total_seconds = int(td.total_seconds())
+            hours = (total_seconds // 3600) % 24
+            minutes = (total_seconds % 3600) // 60
+            return f"{hours:02}:{minutes:02}"
+
         cleaned_rows = []
         for row in rows:
             cleaned_rows.append({
+                "date": str(row["log_date"]),
+                "bedtime": timedelta_to_hhmm(row["sleep_time"]),
+                "wake_time": timedelta_to_hhmm(row["wake_time"]),
                 "date": row["log_date"].strftime("%Y-%m-%d"),
                 "bedtime": str(row["sleep_time"]),
                 "wake_time": str(row["wake_time"]),

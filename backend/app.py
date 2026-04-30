@@ -20,12 +20,13 @@ import os
 from werkzeug.security import generate_password_hash, check_password_hash
 load_dotenv()
 BASE = os.path.dirname(__file__)
-app = Flask(__name__, 
-            template_folder=os.path.join(BASE, "../frontend/html"),
-              static_folder=os.path.join(BASE, "../frontend"),                                                                                           
-              static_url_path="/frontend")
 
-app = Flask(__name__, template_folder="../frontend/html", static_folder="../frontend/css")
+app = Flask(
+    __name__,
+    template_folder="../frontend/html",
+    static_folder="../frontend",
+    static_url_path=""
+)
 app.secret_key = os.getenv("APP_SECRET_KEY")
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_HTTPONLY"] = True
@@ -114,7 +115,8 @@ def add_sleep():
         if wake_dt <= sleep_dt:
             wake_dt += timedelta(days=1)
 
-        values = (user_id, sleep_dt, wake_dt, duration_hours, date)
+
+        values = (user_id, bedtime, wake_time, duration_hours, date)
 
         print("LOGGED IN USER ID:", user_id)
         print("VALUES BEING INSERTED:", values)
@@ -568,7 +570,8 @@ def delete_exam(exam_id):
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    Schema().run()
+    # Schema().run()
     print("New tables User, Sleep_Log, Calendar_Event have been created in the database")
     app.run(debug=True, port=5000)
     print("The backend is now running")
+    

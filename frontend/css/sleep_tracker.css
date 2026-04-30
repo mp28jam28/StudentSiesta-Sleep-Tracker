@@ -25,6 +25,16 @@ body {
     font-size: 24px;
     font-weight: bold;
 }
+.chronotype-title {
+    font-size: 36px;
+    font-weight: bold;
+    text-align: center;
+    /* font-style: italic; */
+    background: linear-gradient(to bottom, gold, #faa376);
+    background-clip: text;                                                                                                       
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;  
+    }
 
 .charts {
     margin: 20px;
@@ -170,6 +180,28 @@ button:hover {
       font-size: 14px;
       margin-bottom: 16px;
   }
+
+.chronotype-description {
+      /* color: rgb(196, 199, 219); */
+      color: rgb(31, 37, 53);
+      font-size: 27px;
+      margin-bottom: 16px;
+      font-family:'DM Sans';
+      line-height: 2.7;
+      margin: 60px;
+      text-align: center;
+      font-style: bold;
+      font-weight: 500;
+      /* font-family:'Space Mono',monospace; */
+  }
+.about-chrono {
+    font-size: xx-large;
+    color: rgb(24, 17, 69);
+    text-align: center;
+    font-family: 'DM Sans';
+    font-style: bold;
+}
+
 .goalStatusMessage {
     display: flex;
     justify-content: space-around;
@@ -302,9 +334,17 @@ button:hover {
 }
 
 .chrono-banner {
-    font: italic;
-    font-size: 10px;
-    text-align: left;
-
-    
+    opacity: 0;
+    visibility: hidden;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.5s ease, max-height 0.5s ease, margin 0.5s ease;
+    margin: 0 auto;
+    margin: 20px auto;
+    background: linear-gradient(to top, #505776, #429188);
+    padding: 20px;
+    border-radius: 129px;
+    box-shadow: 0 4px 10px white;
+    color: white;
+    max-width: 1300px;
 }

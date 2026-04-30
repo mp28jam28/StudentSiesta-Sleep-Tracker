@@ -2,7 +2,9 @@
 <html>
 <head>
     <title>StudentSiesta</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">                              
     <link rel="stylesheet" href="/frontend/css/sleep_tracker.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans&display=swap" rel="stylesheet">                                     
 </head>
 <body>
     <nav>
@@ -30,10 +32,15 @@
 
         <div class="card">
             <h4>Chronotype</h4>
-            <p class="value" id="chronotypeValue">--</p>
-            <p class="goal-description" id="chronotypeDesc"></p>
+            <p class="chronotype-title" id="chronotypeValue">--</p>
+            <button id="learnMoreBtn" onclick="toggleChronoBanner()">Learn more</button>
         </div>
     </section>
+
+    <div class="chrono-banner">
+        <!-- <div class="about-chrono">About your Chronotype: <span id="chronotypeLabel"></span></div> -->
+        <p class="chronotype-description" id="chronotypeDesc"></p>
+    </div>
 
     <section class="charts">
         <h4>Weekly Sleep Pattern</h4>

@@ -57,21 +57,40 @@ if (sleepData) {
     });
 }
 
+function toggleChronoBanner() {
+    const banner = document.querySelector(".chrono-banner");
+    const btn = document.getElementById("learnMoreBtn");
+    if (banner.style.opacity === "1") {
+        banner.style.opacity = "0";
+        banner.style.maxHeight = "0";
+        banner.style.margin = "0 auto";
+        setTimeout(() => banner.style.visibility = "hidden", 500);
+        btn.textContent = "Learn more";
+    } else {
+        banner.style.visibility = "visible";
+        banner.style.opacity = "1";
+        banner.style.maxHeight = "500px";
+        banner.style.margin = "20px auto";
+        btn.textContent = "Show less";
+    }
+}
+
 // ---------- Chronotype Logic ---------- //
 async function updateChronotype() {
     const value = document.getElementById("chronotypeValue");
     const descriptions = {
-        "Lion 🦁" : "You're an early riser . You fall asleep early and naturally embrace the mornings. Peak focus in the morning is common for lions.<br>" +
-                    "Sleep tip: Take a power nap & energize in the afternoon.",
+        "Lion 🦁" : "According to your chronotype, you're an early riser . You fall asleep early and naturally embrace the mornings. Peak focus in the morning is common for lions.<br>" +
+                    "Sleep tip 💡: Take a power nap & energize in the afternoon.",
         "Bear 🐻" : "Your sleep follows the sun. You feel most productive mid-morning and tend to hit an afternoon slump. <br>" + 
-                    "Sleep tip: Get 8 hours of sleep to stay active the next day.",
-        "Wolf 🐺" : "You're a night owl. You struggle to rise early and your energy levels peak in the evening. <br>" +
-                    "Sleep tip: Sleep longer. 8 - 10 is okay!",
-        "Dolphin 🐬" : "You're an light, irregular sleeper. You often lack momentum but have spontaneous bursts of enrgy throughout the day. <br>" +
-                    "Unwind before bedtime to avoid anxious thoughts."
+                    "Sleep tip 💡: Get 8 hours of sleep to stay active the next day.",
+        "Wolf 🐺" : "According to your chronotype, you are naturally active a night. It is difficult to wake up early while your energy really kicks in during the evening. <br>" +
+                    "Sleep tip 💡: Give yourself permission to get more rest—8 to 10 hours can work well for you!",
+        "Dolphin 🐬" : "You're an light, irregular sleeper. You often lack momentum but have spontaneous bursts of energy throughout the day. <br>" +
+                    "Sleep tip 💡: Unwind before bedtime to avoid anxious thoughts."
     };
 
     let desc = document.getElementById("chronotypeDesc");
+    
     if (!value) return;
 
     try {
@@ -80,10 +99,11 @@ async function updateChronotype() {
         });
         if (!response.ok) throw new Error("not ok");
         const data = await response.json();             // Returns either Lion, Wolf, Dolphin
-        value.textContent = data.chronotype ?? "--";    // Calls data{"chronotype"} 
+        value.textContent = data.chronotype ?? "--";
 
-        if (desc)  // desc != null
-            desc.textContent = descriptions[data.chronotype] ?? "";
+        const label = document.getElementById("chronotypeLabel");
+        if (label) label.textContent = data.chronotype ?? "";
+        if (desc) desc.innerHTML = descriptions[data.chronotype] ?? "";
     } catch {
         value.textContent = "--";
     }

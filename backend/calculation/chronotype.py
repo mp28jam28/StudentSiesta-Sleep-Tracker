@@ -51,12 +51,14 @@ def calculate_chronotype(user_id):
         avg_angle += 2 * math.pi
     avg_midpoint = avg_angle * 1440 / (2 * math.pi)
 
-    # Standard deviation of midpoints (detect irregular sleepers → Dolphin)
-    variance = sum((m - avg_midpoint) ** 2 for m in midpoints) / len(midpoints)
-    std_dev = math.sqrt(variance)
+    # Circular standard deviation of midpoints (detect irregular sleepers → Dolphin)
+    sin_mean = sin_sum / len(rows)
+    cos_mean = cos_sum / len(rows)
+    R = math.sqrt(sin_mean ** 2 + cos_mean ** 2)  # mean resultant length (0=scattered, 1=consistent)
+    std_dev = math.sqrt(-2 * math.log(R)) * 1440 / (2 * math.pi)  # circular std dev in minutes
 
-    # High variability (>90 min std dev) = Dolphin regardless of midpoint
-    if std_dev > 90:
+    # High variability (>150 min std dev) = Dolphin regardless of midpoint
+    if std_dev > 150:
         return "Dolphin 🐬"
 
     # Lion: midpoint before 01:30 AM (0-90 min) — sleeps early, wakes very early

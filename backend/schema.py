@@ -39,7 +39,9 @@ class Schema:
                 event_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
                 user_id INT NOT NULL,
                 class_name VARCHAR(255),
+                days VARCHAR(255),
                 start_time DATETIME,
+                exam_date DATETIME,
                 event_type VARCHAR(255),    
                 FOREIGN KEY (user_id) REFERENCES User(user_id)
             )

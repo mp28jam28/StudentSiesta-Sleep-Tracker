@@ -43,7 +43,7 @@
                 </table>
             </div>
         </div>
-    
+
 
         <div class="tab-content" id="classesTab">
             <div class="class-container">
@@ -77,6 +77,7 @@
                         <button type="submit" class="add-class-btn">+ Add Class</button>
                         <div id="classAddedMsg" class="class-added-msg" style="display:none;"></div>
                     </form>
+                    <div id="classList" class="class-list"></div>
                 </div>
             </div>
         </div>
@@ -100,17 +101,18 @@
                         </div>
                         <div class="exam-fields-row">
                             <div class="exam-field">
-                                <input type="radio" id="midterm" name="examType" value="Midterm" required>
+                                <input type="radio" id="midterm" name="examType" value="Midterm">
                                 <label for="midterm" class="type-btn">Midterm</label>
                             </div>
                             <div class="exam-field">
-                                <input type="radio" id="final" name="examType" value="Final" required>
+                                <input type="radio" id="final" name="examType" value="Final">
                                 <label for="final" class="type-btn">Final</label>
                             </div>
                         </div>
                         <button type="submit" class="add-exam-btn">+ Add Exam</button>
                         <div id="examAddedMsg" class="exam-added-msg" style="display:none;"></div>
                     </form>
+                    <div id="examList" class="exam-list"></div>
                 </div>
             </div>
         </div>

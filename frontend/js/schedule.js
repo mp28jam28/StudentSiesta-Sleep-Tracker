@@ -1,5 +1,7 @@
 const tabs = document.querySelectorAll(".schedule-tabs .tab");
 const contents = document.querySelectorAll(".tab-content");
+const classMsg = document.getElementById("classAddedMsg");
+const examMsg = document.getElementById("examAddedMsg");
 
 tabs.forEach(tab => {
     tab.addEventListener("click", () => {
@@ -59,6 +61,11 @@ function renderCalendar(month, year)
             {
                 cell.textContent = date;
 
+                cell.dataset.day = date;
+
+                const weekdayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+                cell.dataset.weekday = weekdayNames[j];
+
                 // mark today
                 if (date === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
                     cell.classList.add("today");
@@ -80,6 +87,7 @@ document.getElementById("prevMonth").addEventListener("click", () => {
         currentYear--;
     }
     renderCalendar(currentMonth, currentYear);
+    loadEvents();
 });
 
 document.getElementById("nextMonth").addEventListener("click", () => {
@@ -89,10 +97,12 @@ document.getElementById("nextMonth").addEventListener("click", () => {
         currentYear++;
     }
     renderCalendar(currentMonth, currentYear);
+    loadEvents();
 });
 
 // Initial render
 renderCalendar(currentMonth, currentYear);
+loadEvents();
 
 // Day toggle buttons
 document.querySelectorAll(".day-btn").forEach(btn => {
@@ -100,23 +110,276 @@ document.querySelectorAll(".day-btn").forEach(btn => {
 });
 
 // Add Class form
-document.getElementById("addClasses").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const className = e.target.querySelector("input[type='text']").value.trim();
-    const msg = document.getElementById("classAddedMsg");
-    msg.textContent = `${className || "Class"} got added to Calendar!`;
-    msg.style.display = "block";
+document.getElementById("addClasses").addEventListener("submit", async function (event) {
+    event.preventDefault();
+    
+    const className = event.target.querySelector("input[type='text']").value.trim();
+    const days = [...document.querySelectorAll(".day-btn.selected")]
+        .map(btn => btn.dataset.day);
+    const time = event.target.querySelector("input[type='time']").value;
+
+    if (days.length === 0) {
+        alert("Please select at least one day");
+        return;
+    }
+
+    try {
+        const response = await fetch("http://127.0.0.1:5000/add_class", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                className: className,
+                days: days.join(","),
+                time: time
+            })
+        });
+
+        const result = await response.json();
+        console.log(result);
+
+        if (!response.ok) {
+                throw new Error(result.error || "Failed to save class");
+            }
+
+        classMsg.textContent = `${className || "Class"} got added to Calendar!`;
+        classMsg.style.display = "block";
+
+        loadEvents();
+        event.target.reset();
+    } catch (error) {
+        console.error("Error saving class:", error);
+        classMsg.textContent = `Error: ${error.message}`;
+        classMsg.style.color = "red";
+        classMsg.style.display = "block";
+    }
 });
 
 // Add Exam form
-document.getElementById("addExams").addEventListener("submit", (e) => {
-    e.preventDefault();
+document.getElementById("addExams").addEventListener("submit", async function (event) {
+    event.preventDefault();
 
-    const examName = e.target.elements.examName.value.trim();
-    const examDate = e.target.elements.examDate.value;
-    const examType = e.target.querySelector("input[name='examType']:checked")?.value;
+    const examName = event.target.elements.examName.value.trim();
+    const examDate = event.target.elements.examDate.value;
+    const examType = event.target.querySelector("input[name='examType']:checked")?.value;
 
-    const msg = document.getElementById("examAddedMsg");
-    msg.textContent = `${examName || "Exam"} got added to Calendar!`;
-    msg.style.display = "block";
+    if (!examType) {
+        alert("Please select the exam type");
+        return;
+    }
+
+    try {
+        const response = await fetch("http://127.0.0.1:5000/add_exam", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                examName: examName,
+                examDate: examDate,
+                examType: examType
+            })
+        });
+
+        const result = await response.json();
+        console.log(result);
+
+        if (!response.ok) {
+                throw new Error(result.error || "Failed to save exam");
+            }
+        
+        examMsg.textContent = `${examName || "Exam"} got added to Calendar!`;
+        examMsg.style.display = "block";
+
+        loadEvents();
+        event.target.reset();
+    } catch (error) {
+        console.error("Error saving exam:", error);
+        examMsg.textContent = `Error: ${error.message}`;
+        examMsg.style.color = "red";
+        examMsg.style.display = "block";
+    }
 });
+
+function renderEvents(events) {
+    document.querySelectorAll(".event").forEach(e => e.remove());
+
+    events.forEach(event => {
+
+        // Exams
+        if (event.exam_date) {
+            const date = new Date(event.exam_date);
+
+            const day = date.getDate();
+            const month = date.getMonth();
+            const year = date.getFullYear();
+
+            if (month !== currentMonth || year !== currentYear) {
+                return;
+            }
+
+            const cell = document.querySelector(`[data-day='${day}']`);
+            if (!cell) return;
+
+            const el = document.createElement("div");
+            el.classList.add("event");
+            el.style.background = "red";
+            el.style.fontSize = "14px";
+            el.style.marginTop = "5px";
+            el.style.borderRadius = "5px";
+            el.style.padding = "2px";
+
+            el.textContent = event.class_name;
+
+            cell.appendChild(el);
+        }
+
+        // Classes
+        else if (event.days) {
+            const days = event.days.split(",");
+
+            days.forEach(dayStr => {
+                const cells = document.querySelectorAll(`[data-weekday='${dayStr}']`);
+
+                cells.forEach(cell => {
+                    const el = document.createElement("div");
+                    el.classList.add("event");
+                    el.style.background = "orange";
+                    el.style.fontSize = "14px";
+                    el.style.marginTop = "5px";
+                    el.style.borderRadius = "5px";
+                    el.style.padding = "2px";
+
+                    el.textContent = `${event.start_time.slice(0,5)} ${event.class_name}`;
+
+                    cell.appendChild(el);
+                });
+            });
+        }
+    });
+}
+
+async function deleteClass(event) {
+    const id = event.currentTarget.dataset.id;
+
+    try {
+        const response = await fetch(`http://127.0.0.1:5000/delete_class/${id}`, {
+            method: "DELETE",
+            credentials: "include"
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || "Delete failed");
+        }
+
+        loadEvents();
+    } catch (error) {
+        console.error("Error deleting class:", error);
+        examMsg.textContent = `Error: ${error.message}`;
+        examMsg.style.color = "red";
+        examMsg.style.display = "block";
+    }
+}
+
+function renderClassList(events) {
+    const container = document.getElementById("classList");
+    container.innerHTML = "";
+
+    events.forEach(event => {
+        const div = document.createElement("div");
+        div.classList.add("class-card");
+
+        div.innerHTML = `
+            <div class="class-left">
+                <div class="class-info">
+                    <div class="class-title">${event.class_name}</div>
+                    <div class="class-days">${event.days} at ${event.start_time.slice(0,5)}</div>
+                </div>
+            </div>
+            <button class="delete-btn" data-id="${event.event_id}">🗑️</button>
+        `;
+
+        container.appendChild(div);
+    });
+
+    document.querySelectorAll(".delete-btn").forEach(btn => {
+        btn.addEventListener("click", deleteClass);
+    });
+}
+
+async function deleteExam(event) {
+    const id = event.currentTarget.dataset.id;
+
+    try {
+        const response = await fetch(`http://127.0.0.1:5000/delete_exam/${id}`, {
+            method: "DELETE",
+            credentials: "include"
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || "Delete failed");
+        }
+
+        loadEvents();
+    } catch (error) {
+        console.error("Error deleting exam:", error);
+        examMsg.textContent = `Error: ${error.message}`;
+        examMsg.style.color = "red";
+        examMsg.style.display = "block";
+    }
+}
+
+function renderExamList(events) {
+    const container = document.getElementById("examList");
+    container.innerHTML = "";
+
+    events.forEach(event => {
+        const div = document.createElement("div");
+        div.classList.add("exam-card");
+
+        const formattedDate = new Date(event.exam_date)
+            .toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+            });
+
+        div.innerHTML = `
+            <div class="exam-left">
+                <div class="exam-info">
+                    <div class="exam-title">${event.class_name}</div>
+                    <div class="exam-date">${formattedDate}</div>
+                </div>
+            </div>
+            <button class="delete-btn" data-id="${event.event_id}">🗑️</button>
+        `;
+
+        container.appendChild(div);
+    });
+
+    document.querySelectorAll(".delete-btn").forEach(btn => {
+        btn.addEventListener("click", deleteExam);
+    });
+}
+
+// Load events to calendar
+async function loadEvents() {
+    const response = await fetch("http://127.0.0.1:5000/get_events", {
+        credentials: "include"
+    });
+
+    const events = await response.json();
+
+    console.log("Events:", events);
+
+    renderEvents(events);
+    renderClassList(events.filter(e => e.event_type === "class"));
+    renderExamList(events.filter(e => e.event_type === "exam"));
+}

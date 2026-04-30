@@ -382,7 +382,190 @@ def me():
         return jsonify({"error": "Not logged in"}), 401
     return jsonify(user), 200
 
+# ---- Calendar Events (Classes and Exams) ---- #
+@app.route("/add_class", methods=["POST"])
+def add_class():
+    user = session.get("user")
+    if not user:
+        return jsonify({"error": "Not logged in"}), 401
 
+    user_id = user["user_id"]
+
+    data = request.get_json()
+
+    class_name = data.get("className")
+    days = data.get("days")
+    start_time = data.get("time")
+
+    if not all([class_name, days, start_time]):
+        return jsonify({"error": "Missing fields"}), 400
+
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
+
+        query = """
+        INSERT INTO Calendar_Event (user_id, class_name, days, start_time, exam_date, event_type)
+        VALUES (%s, %s, %s, %s, %s, %s)
+        """
+
+        values = (
+            user_id,
+            class_name,
+            days,
+            start_time,
+            None,
+            "class"
+        )
+
+        print("LOGGED IN USER ID:", user_id)
+        print("VALUES BEING INSERTED:", values)
+
+        cursor.execute(query, values)
+        connection.commit()
+
+        cursor.close()
+        connection.close()
+
+        return jsonify({
+            "message": "Class saved successfully"
+        }), 201
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route("/add_exam", methods=["POST"])
+def add_exam():
+    user = session.get("user")
+    if not user:
+        return jsonify({"error": "Not logged in"}), 401
+
+    user_id = user["user_id"]
+
+    data = request.get_json()
+
+    exam_name = data.get("examName")
+    exam_date = data.get("examDate")
+    exam_type = data.get("examType")
+
+    if not all([exam_name, exam_date, exam_type]):
+        return jsonify({"error": "Missing fields"}), 400
+
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
+
+        query = """
+        INSERT INTO Calendar_Event (user_id, class_name, days, start_time, exam_date, event_type)
+        VALUES (%s, %s, %s, %s, %s, %s)
+        """
+
+        values = (
+            user_id,
+            exam_name,
+            None,
+            None,
+            exam_date,
+            "exam"
+        )
+
+        print("LOGGED IN USER ID:", user_id)
+        print("VALUES BEING INSERTED:", values)
+
+        cursor.execute(query, values)
+        connection.commit()
+
+        cursor.close()
+        connection.close()
+
+        return jsonify({
+            "message": "Exam saved successfully"
+        }), 201
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route("/get_events", methods=["GET"])
+def get_events():
+    user = session.get("user")
+    if not user:
+        return jsonify({"error": "Not logged in"}), 401
+
+    user_id = user["user_id"]
+
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        query = """
+        SELECT 
+            event_id,
+            user_id,
+            class_name,
+            days,
+            start_time,
+            exam_date,
+            event_type
+        FROM Calendar_Event
+        WHERE user_id = %s
+        """
+
+        cursor.execute(query, (user_id,))
+        events = cursor.fetchall()
+
+        cleaned_events = []
+        for event in events:
+            cleaned_events.append({
+                "event_id": str(event["event_id"]),
+                "user_id": str(event["user_id"]),
+                "class_name": str(event["class_name"]),
+                "days": str(event["days"]) if event["days"] else None,
+                "start_time": str(event["start_time"]) if event["start_time"] else None,
+                "exam_date": str(event["exam_date"]) if event["exam_date"] else None,
+                "event_type": str(event["event_type"])
+            })
+
+        cursor.close()
+        connection.close()
+
+        return jsonify(cleaned_events), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/delete_class/<int:class_id>", methods=["DELETE"])
+def delete_class(class_id):
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
+
+        cursor.execute("DELETE FROM Calendar_Event WHERE event_id = %s", (class_id,))
+        connection.commit()
+
+        cursor.close()
+        connection.close()
+
+        return jsonify({"message": "Class deleted successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/delete_exam/<int:exam_id>", methods=["DELETE"])
+def delete_exam(exam_id):
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
+
+        cursor.execute("DELETE FROM Calendar_Event WHERE event_id = %s", (exam_id,))
+        connection.commit()
+
+        cursor.close()
+        connection.close()
+
+        return jsonify({"message": "Exam deleted successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     Schema().run()

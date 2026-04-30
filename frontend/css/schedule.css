@@ -82,6 +82,7 @@
     width: 100%;
     border-collapse: collapse;
     text-align: center;
+    table-layout: fixed;
 }
 
 .calendar-table th {
@@ -180,6 +181,49 @@
     color: white;
 }
 
+.class-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.class-card {
+    display: flex;
+    background: #260161;
+    border-radius: 14px;
+    padding: 10px 24px;
+    height: 70px;
+}
+
+.class-left {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.class-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.class-title {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.class-days {
+    font-size: 14px;
+}
+
+.delete-btn {
+    background: none;
+    cursor: pointer;
+    font-size: 18px;
+    align-self: center;
+    margin-left: auto;
+}
+
 .add-exams-description {
     color: #aaa;
     font-size: 14px;
@@ -254,4 +298,47 @@
 .exam-field input[type="radio"]:checked + .type-btn {
     background: #4a2dbd;
     color: white;
+}
+
+.exam-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.exam-card {
+    display: flex;
+    background: #260161;
+    border-radius: 14px;
+    padding: 10px 24px;
+    height: 70px;
+}
+
+.exam-left {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.exam-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.exam-title {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.exam-date {
+    font-size: 14px;
+}
+
+.delete-btn {
+    background: none;
+    cursor: pointer;
+    font-size: 18px;
+    align-self: center;
+    margin-left: auto;
 }

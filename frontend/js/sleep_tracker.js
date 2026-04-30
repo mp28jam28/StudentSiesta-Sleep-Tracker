@@ -100,6 +100,8 @@ async function updateChart() {
         console.error("Failed to fetch sleep data:", error);
         sleepEntries = [];
     }
+    
+    // updateChronotype(sleepEntries);
 
    const hoursSlept = weekDates.map(d => {
     const yyyyMmDd = d.toLocaleDateString("en-CA");

@@ -9,32 +9,51 @@ from db import get_db_connection
 from flask_cors import CORS
 from google.oauth2 import id_token
 from google.auth.transport import requests as grequests
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, render_template
+from schema import Schema
+from calculation import calculateChronotype
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
-app = Flask(__name__)
-app.secret_key = "studentprojectval"
+app = Flask(__name__, template_folder="../frontend/html", static_folder="../frontend/css")
+app.secret_key = os.getenv("APP_SECRET_KEY")
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 
 GOOGLE_CLIENT_ID = "1036286878464-5v0om0r4rcgov918sn18q5l61dd1nka1.apps.googleusercontent.com"
 CORS(app, supports_credentials= True)
 
+# ---- Amount of time user has slept in one night ----
 def calculate_duration_hours(bedtime_str, wake_time_str):
     bedtime = datetime.strptime(bedtime_str, "%H:%M")
     wake_time = datetime.strptime(wake_time_str, "%H:%M")
 
-    
     if wake_time <= bedtime:
         wake_time += timedelta(days=1)
 
     duration = wake_time - bedtime
     return round(duration.total_seconds() / 3600, 2)
 
+# ---- GET Chronotype ----#
+@app.route("/get_chronotype")
+def get_chronotype():
+    user = session.get("user")
+    if not user: # If no user is logged in
+        return jsonify({"error": "No user is currently logged in"}), 401
+    
+    result = calculateChronotype(user["user_id"])
+    return jsonify({"chronotype": result})
+    
+
+# ---- Home Page ----
 @app.route("/")
 def home():
-    return jsonify({"message": "StudentSiesta backend is running"})
+    return render_template("homepage.html")
+    # return jsonify({"message": "StudentSiesta backend is running"})
 
+# ---- Logging Sleep ----
 @app.route("/add_sleep", methods=["POST"])
 def add_sleep():
 
@@ -89,6 +108,7 @@ def add_sleep():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
 @app.route("/sleep_data", methods=["GET"])
 def get_sleep_data():
     user = session.get("user")
@@ -96,6 +116,7 @@ def get_sleep_data():
         return jsonify({"error": "Not logged in"}), 401
 
     user_id = user["user_id"]
+    user_email = user["email"]
 
     try:
         connection = get_db_connection()
@@ -129,7 +150,7 @@ def get_sleep_data():
         return jsonify({"error": str(e)}), 500
 
 
-
+# ---- Google Login ---- #
 @app.route("/google-login", methods=["POST"])
 def google_login():
     data = request.get_json()
@@ -193,6 +214,17 @@ def google_login():
     except Exception as e:
         return jsonify({"error": str(e)}), 401
     
+# ---- TEMPORARY HARD-CODED CREDENTIALS: Test login as Natalie (remove when registration is done) ----
+@app.route("/dev-login", methods=["GET"])
+def dev_login():
+    session["user"] = {
+        "user_id": 1,
+        "username": "natalie",
+        "email": "mp28jam@gmail.com",
+        "name": "natalie"
+    }
+    return jsonify({"message": "Logged in as natalie (dev mode)"}), 200
+
 @app.route("/me", methods=["GET"])
 def me():
     user = session.get("user")
@@ -206,4 +238,7 @@ def logout():
     return jsonify({"message": "Logged out"}), 200
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    Schema().run()
+    print("New tables User, Sleep_Log, Calendar_Event have been created in the database")
+    app.run(debug=True, port=5000)
+    print("The backend is now running")

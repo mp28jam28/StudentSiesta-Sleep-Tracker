@@ -13,7 +13,7 @@ class Schema:
             CREATE TABLE IF NOT EXISTS User(
                 user_id INT PRIMARY KEY AUTO_INCREMENT,
                 username VARCHAR(255) NOT NULL,
-                email VARCHAR(255) NOT NULL,
+                email VARCHAR(255),
                 password VARCHAR(255) NOT NULL,
                 sleep_goal FLOAT,
                 chronotype VARCHAR(50) 
@@ -25,10 +25,10 @@ class Schema:
             CREATE TABLE IF NOT EXISTS Sleep_Log(
                 log_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
                 user_id INT NOT NULL,
-                sleep_time DATETIME,
-                wake_time DATETIME,
+                log_date DATE,
+                sleep_time TIME,
+                wake_time TIME,
                 duration_hours FLOAT,
-                log_time DATETIME,
                 FOREIGN KEY (user_id) REFERENCES User(user_id)
             )
         """)
@@ -68,8 +68,12 @@ class Schema:
         self.create_user_table()
         self.create_sleep_log_table()
         self.create_calendar_table()
-        # self.add_new_column()
-        # self.delete_column()
+        # self.delete_column("User", "email")
+        # self.add_new_column("User", "email", "VARCHAR(255)")
+
         # self.delete_all_tables()
         self.connection.commit()
         self.connection.close()
+
+# if __name__ == "__main__":
+#     schema = Schema()

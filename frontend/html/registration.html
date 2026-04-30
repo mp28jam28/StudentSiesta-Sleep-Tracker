@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>StudentSiesta - Login</title>
+    <title>StudentSiesta - Register</title>
     <link rel="stylesheet" href="../css/sleep_tracker.css">
     <link rel="stylesheet" href="../css/login.css">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -16,19 +16,26 @@
         <a href="schedule.html"><button class="tab">Schedule</button></a>
         <a href="insights.html"><button class="tab">Insights</button></a>
         <a href="login.html"><button class="tab active">Login</button></a>
+        <button class="tab" id="logoutBtn">Logout</button>
     </nav>
 
     <div class="login-container">
         <div class="login-wrapper">
-            <form id="loginForm">
+            <form id="registerForm">
                 <div class="create-account">Create an Account</div>
 
                 <div class="container">
                     <label for="uname"><b>Username</b></label>
                     <input type="text" id="uname" name="uname" placeholder="Enter Username" required>
 
+                    <label for="email"><b>Email</b></label>
+                    <input type="email" id="email" name="email" placeholder="Enter Email" required>
+
                     <label for="psw"><b>Password</b></label>
-                    <input type="password" id="psw" name="psw" placeholder="Enter Password" required>
+                    <input type="password" id="psw" name="psw" placeholder="Enter Password" required minlength="8">
+
+                    <label for="psw_confirm"><b>Confirm Password</b></label>
+                    <input type="password" id="psw_confirm" name="psw_confirm" placeholder="Re-enter Password" required minlength="8">
 
                     <button type="submit">Create Account</button>
 
@@ -50,7 +57,7 @@
 
             <div id="g_id_onload"
                 data-client_id="1036286878464-5v0om0r4rcgov918sn18q5l61dd1nka1.apps.googleusercontent.com"
-                data-context="signin"
+                data-context="signup"
                 data-ux_mode="popup"
                 data-callback="handleCredentialResponse">
             </div>
@@ -59,52 +66,76 @@
                 data-type="standard"
                 data-size="large"
                 data-theme="outline"
-                data-text="signin_with"
+                data-text="signup_with"
                 data-shape="rectangular">
             </div>
         </div>
     </div>
 
     <script>
-    async function handleCredentialResponse(response) {
+    // Traditional username/password registration
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const username = document.getElementById("uname").value.trim();
+        const email    = document.getElementById("email").value.trim();
+        const password = document.getElementById("psw").value;
+        const confirm  = document.getElementById("psw_confirm").value;
+
+        if (password !== confirm) {
+            alert("Passwords do not match.");
+            return;
+        }
 
         try {
-
-            const res = await fetch("http://127.0.0.1:5000/google-login", {
+            const res = await fetch("http://127.0.0.1:5000/register", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 credentials: "include",
-                body: JSON.stringify({
-                    credential: response.credential
-                })
+                body: JSON.stringify({ username, email, password })
             });
 
             const result = await res.json();
 
             if (!res.ok) {
-                throw new Error(result.error || "Google login failed");
+                throw new Error(result.error || "Registration failed");
             }
 
-            alert("Logged in as " + result.email);
-
-            // redirect after login
+            alert("Account created for " + result.username);
             window.location.href = "homepage.html";
 
         } catch (err) {
+            console.error(err);
+            alert("Registration error: " + err.message);
+        }
+    });
 
+    // Google sign-up (same flow as login — backend creates the user if email is new)
+    async function handleCredentialResponse(response) {
+        try {
+            const res = await fetch("http://127.0.0.1:5000/google-login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ credential: response.credential })
+            });
+
+            const result = await res.json();
+            if (!res.ok) throw new Error(result.error || "Google login failed");
+
+            alert("Logged in as " + result.email);
+            window.location.href = "homepage.html";
+
+        } catch (err) {
             console.error(err);
             alert("Login error: " + err.message);
-
         }
-
     }
     </script>
-    <div class="account-exists">
-    Already have an account? 
-    <a href="login.html">Sign in</a>
-    </div>
 
+    <div class="account-exists">
+        Already have an account?
+        <a href="login.html">Sign in</a>
+    </div>
 </body>
 </html>

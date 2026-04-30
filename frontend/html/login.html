@@ -16,6 +16,7 @@
         <a href="schedule.html"><button class="tab">Schedule</button></a>
         <a href="insights.html"><button class="tab">Insights</button></a>
         <a href="login.html"><button class="tab active">Login</button></a>
+        <button class="tab" id="logoutBtn">Logout</button>
     </nav>
 
     <div class="login-container">
@@ -109,5 +110,41 @@
 
     }
     </script>
+    <script>
+    document.getElementById("loginForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const username = document.getElementById("uname").value;
+    const password = document.getElementById("psw").value;
+
+    try {
+        const res = await fetch("/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                username: username,
+                password: password
+            })
+        });
+
+        const result = await res.json();
+
+        if (!res.ok) {
+            throw new Error(result.error || "Login failed");
+        }
+
+        alert("Logged in as " + result.username);
+        window.location.href = "homepage.html";
+
+    } catch (err) {
+        console.error(err);
+        alert("Login error: " + err.message);
+    }
+   });
+   </script>
+    <script src="/js/logout.js"></script>
 </body>
 </html>

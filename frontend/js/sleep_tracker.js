@@ -96,6 +96,7 @@ async function updateChart() {
         }
 
         sleepEntries = await response.json();
+        
     } catch (error) {
         console.error("Failed to fetch sleep data:", error);
         sleepEntries = [];

@@ -12,12 +12,18 @@ from google.auth.transport import requests as grequests
 from flask import Flask, request, jsonify, session, render_template
 from schema import Schema
 from calculation import calculateChronotype
+from werkzeug.security import generate_password_hash
 from dotenv import load_dotenv
 import os
-
+from werkzeug.security import generate_password_hash, check_password_hash
 load_dotenv()
 
-app = Flask(__name__, template_folder="../frontend/html", static_folder="../frontend/css")
+app = Flask(
+    __name__,
+    template_folder="../frontend/html",
+    static_folder="../frontend",
+    static_url_path=""
+)
 app.secret_key = os.getenv("APP_SECRET_KEY")
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_HTTPONLY"] = True
@@ -52,6 +58,34 @@ def get_chronotype():
 def home():
     return render_template("homepage.html")
     # return jsonify({"message": "StudentSiesta backend is running"})
+    
+@app.route("/logout", methods=["POST"])
+def logout():
+    session.pop("user", None)
+    return jsonify({"message": "Logged out"}), 200
+@app.route("/homepage.html")
+def homepage():
+    return render_template("homepage.html")
+
+@app.route("/login.html")
+def login():
+    return render_template("login.html")
+
+@app.route("/registration.html")
+def registration():
+    return render_template("registration.html")
+
+@app.route("/log_sleep.html")
+def log_sleep():
+    return render_template("log_sleep.html")
+
+@app.route("/schedule.html")
+def schedule():
+    return render_template("schedule.html")
+
+@app.route("/insights.html")
+def insights():
+    return render_template("insights.html")
 
 # ---- Logging Sleep ----
 @app.route("/add_sleep", methods=["POST"])
@@ -77,19 +111,13 @@ def add_sleep():
 
         connection = get_db_connection()
         cursor = connection.cursor()
+
         query = """
-          INSERT INTO Sleep_Log (user_id, sleep_time, wake_time, duration_hours, log_time)
-          VALUES (%s, %s, %s, %s, NOW())
-          """
+            INSERT INTO Sleep_Log (user_id, sleep_time, wake_time, duration_hours, log_date)
+            VALUES (%s, %s, %s, %s, %s)
+        """
 
-
-        sleep_dt = datetime.strptime(f"{date} {bedtime}", "%Y-%m-%d %H:%M")
-        wake_dt = datetime.strptime(f"{date} {wake_time}", "%Y-%m-%d %H:%M")
-
-        if wake_dt <= sleep_dt:
-         wake_dt += timedelta(days=1)
-
-        values = (user_id, sleep_dt, wake_dt, duration_hours)
+        values = (user_id, bedtime, wake_time, duration_hours, date)
 
         print("LOGGED IN USER ID:", user_id)
         print("VALUES BEING INSERTED:", values)
@@ -106,6 +134,7 @@ def add_sleep():
         }), 201
 
     except Exception as e:
+        print("ERROR IN /add_sleep:", e)
         return jsonify({"error": str(e)}), 500
 
 
@@ -116,17 +145,16 @@ def get_sleep_data():
         return jsonify({"error": "Not logged in"}), 401
 
     user_id = user["user_id"]
-    user_email = user["email"]
 
     try:
         connection = get_db_connection()
         cursor = connection.cursor(dictionary=True)
 
         cursor.execute("""
-            SELECT sleep_time, wake_time, duration_hours
+            SELECT log_date, sleep_time, wake_time, duration_hours
             FROM Sleep_Log
             WHERE user_id = %s
-            ORDER BY sleep_time ASC
+            ORDER BY log_date ASC
         """, (user_id,))
 
         rows = cursor.fetchall()
@@ -134,9 +162,9 @@ def get_sleep_data():
         cleaned_rows = []
         for row in rows:
             cleaned_rows.append({
-                "date": row["sleep_time"].strftime("%Y-%m-%d"),
-                "bedtime": row["sleep_time"].strftime("%H:%M"),
-                "wake_time": row["wake_time"].strftime("%H:%M"),
+                "date": row["log_date"].strftime("%Y-%m-%d"),
+                "bedtime": str(row["sleep_time"]),
+                "wake_time": str(row["wake_time"]),
                 "duration_hours": float(row["duration_hours"])
             })
 
@@ -214,6 +242,122 @@ def google_login():
     except Exception as e:
         return jsonify({"error": str(e)}), 401
     
+    # ---- Traditional Registration ---- #
+@app.route("/register", methods=["POST"])
+def register():
+    data = request.get_json() or {}
+
+    username = (data.get("username") or "").strip()
+    email    = (data.get("email") or "").strip().lower()
+    password = data.get("password") or ""
+
+    if not username or not email or not password:
+        return jsonify({"error": "Username, email, and password are required"}), 400
+
+    if len(password) < 8:
+        return jsonify({"error": "Password must be at least 8 characters"}), 400
+
+    if "@" not in email or "." not in email:
+        return jsonify({"error": "Please enter a valid email"}), 400
+
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        cursor.execute(
+            "SELECT username, email FROM User WHERE username = %s OR email = %s",
+            (username, email)
+        )
+        existing = cursor.fetchone()
+
+        if existing:
+            cursor.close()
+            connection.close()
+            if existing["username"] == username:
+                return jsonify({"error": "Username already taken"}), 409
+            return jsonify({"error": "An account with this email already exists"}), 409
+
+        hashed = generate_password_hash(password)
+
+        cursor.execute(
+            """
+            INSERT INTO User (username, email, password)
+            VALUES (%s, %s, %s)
+            """,
+            (username, email, hashed)
+        )
+        connection.commit()
+
+        user_id = cursor.lastrowid
+        cursor.close()
+        connection.close()
+
+        session["user"] = {
+            "user_id": user_id,
+            "username": username,
+            "email": email,
+            "name": username
+        }
+
+        return jsonify({
+            "message": "Account created successfully",
+            "user_id": user_id,
+            "username": username,
+            "email": email
+        }), 201
+
+    except Exception as e:
+        print("ERROR IN /register:", e)
+        return jsonify({"error": str(e)}), 500
+    
+
+@app.route("/login", methods=["POST"])
+def login_user():
+    data = request.get_json() or {}
+
+    username = (data.get("username") or "").strip()
+    password = data.get("password") or ""
+
+    if not username or not password:
+        return jsonify({"error": "Username and password are required"}), 400
+
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        cursor.execute(
+            "SELECT user_id, username, email, password FROM User WHERE username = %s",
+            (username,)
+        )
+        user_row = cursor.fetchone()
+
+        cursor.close()
+        connection.close()
+
+        if not user_row:
+            return jsonify({"error": "Invalid username or password"}), 401
+
+        if not check_password_hash(user_row["password"], password):
+            return jsonify({"error": "Invalid username or password"}), 401
+
+        session["user"] = {
+            "user_id": user_row["user_id"],
+            "username": user_row["username"],
+            "email": user_row["email"],
+            "name": user_row["username"]
+        }
+
+        return jsonify({
+            "message": "Login successful",
+            "user_id": user_row["user_id"],
+            "username": user_row["username"],
+            "email": user_row["email"]
+        }), 200
+
+    except Exception as e:
+        print("ERROR IN /login:", e)
+        return jsonify({"error": str(e)}), 500
+
 # ---- TEMPORARY HARD-CODED CREDENTIALS: Test login as Natalie (remove when registration is done) ----
 @app.route("/dev-login", methods=["GET"])
 def dev_login():
@@ -232,10 +376,7 @@ def me():
         return jsonify({"error": "Not logged in"}), 401
     return jsonify(user), 200
 
-@app.route("/logout", methods=["POST"])
-def logout():
-    session.pop("user", None)
-    return jsonify({"message": "Logged out"}), 200
+
 
 if __name__ == "__main__":
     Schema().run()

@@ -62,12 +62,21 @@
         </ul>
     </div>
 
-    <div class="sleep-tips">
-        <h3 class="chrono-banner">🌙 Your Chronotype: <span id="Chronotype"> </span></h3>
-        <div class="small-bubble-banner" style="display: inline-block; margin-right: 38px;"> Average Bedtime<div class ="chronotype-stats">12:15am</div></div>
-        <div class="small-bubble-banner" style="display: inline-block; margin-right: 38px;"> Average Wake Time<div class ="chronotype-stats">8:30am</div> </div>
-        <div class="small-bubble-banner" style="display: inline-block;"> Natural Sleep Duration<div class ="chronotype-stats">8.2hrs</div></div>
-    </div>  
+    <div class="sleep-info">
+        <div class="small-bubble-banner">
+            Average Bedtime
+            <div class ="chronotype-stats" id="avg-bedtime">--:--</div>
+        </div>
+        <div class="small-bubble-banner">
+            Average Wake Time
+            <div class ="chronotype-stats" id="avg-wake-time">--:--</div>
+        </div>
+        <div class="small-bubble-banner">
+            Natural Sleep Duration
+            <div class ="chronotype-stats" id="avg-sleep-duration">--hrs</div>
+        </div>
+    </div>
+
     <script src="../js/insights.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="/js/logout.js"></script>

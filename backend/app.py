@@ -13,6 +13,9 @@ from flask import Flask, request, jsonify, session, render_template
 from schema import Schema
 from calculation.chronotype import calculate_chronotype
 from calculation.duration import calculate_duration_hours
+from calculation.average_bedtime import calculate_average_bedtime
+from calculation.average_waketime import calculate_average_waketime
+from calculation.average_sleep_duration import calculate_average_sleep_duration
 
 from werkzeug.security import generate_password_hash
 from dotenv import load_dotenv
@@ -636,6 +639,96 @@ def delete_exam(exam_id):
         connection.close()
 
         return jsonify({"message": "Exam deleted successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route("/average_bedtime", methods=["GET"])
+def average_bedtime():
+    user = session.get("user")
+    if not user:
+        return jsonify({"error": "Not logged in"}), 401
+
+    user_id = user["user_id"]
+    
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
+
+        cursor.execute(
+            """SELECT sleep_time FROM Sleep_Log WHERE user_id = %s""", (user_id,)
+        )
+        rows = cursor.fetchall()
+
+        cursor.close()
+        connection.close()
+
+        avg_time = calculate_average_bedtime(rows)
+
+        if avg_time is None:
+            return jsonify({"average_bedtime": None})
+
+        return jsonify({"average_bedtime": avg_time}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route("/average_wake_time", methods=["GET"])
+def average_wake_time():
+    user = session.get("user")
+    if not user:
+        return jsonify({"error": "Not logged in"}), 401
+
+    user_id = user["user_id"]
+    
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
+
+        cursor.execute(
+            """SELECT wake_time FROM Sleep_Log WHERE user_id = %s""", (user_id,)
+        )
+        rows = cursor.fetchall()
+        
+        cursor.close()
+        connection.close()
+
+        avg_time = calculate_average_waketime(rows)
+
+        if avg_time is None:
+            return jsonify({"average_wake_time": None})
+
+        return jsonify({"average_wake_time": avg_time}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route("/average_sleep_duration", methods=["GET"])
+def average_sleep_duration():
+    user = session.get("user")
+    if not user:
+        return jsonify({"error": "Not logged in"}), 401
+
+    user_id = user["user_id"]
+    
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        
+        cursor.execute(
+            """SELECT sleep_time, wake_time FROM Sleep_Log WHERE user_id = %s""", (user_id,)
+        )
+        rows = cursor.fetchall()
+        
+        cursor.close()
+        connection.close()
+
+        avg_time = calculate_average_sleep_duration(rows)
+
+        if avg_time is None:
+            return jsonify({"average_sleep_duration": None})
+
+        return jsonify({"average_sleep_duration": avg_time}), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

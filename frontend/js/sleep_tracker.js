@@ -35,6 +35,8 @@ if (sleepData) {
 
             sleepData.reset();
 
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+
             if (statusMessage) {
                 statusMessage.textContent = `Sleep logged successfully. Duration: ${result.duration_hours} hours`;
                 statusMessage.style.color = "green";

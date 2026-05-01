@@ -135,6 +135,30 @@ def add_sleep():
     except Exception as e:
         print("ERROR IN /add_sleep:", e)
         return jsonify({"error": str(e)}), 500
+    
+@app.route("/update_sleep_goal", methods=["POST"])
+def set_sleep_goal():
+    user = session.get("user")
+    if not user:
+        return jsonify({"error": "Not logged in"}), 401
+    
+    data = request.get_json()
+    sleep_goal = data.get("sleep_goal")
+    if sleep_goal is None:
+        return jsonify({"error": "sleep_goal is required"}), 400
+
+    user_id = user["user_id"]
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(
+        """UPDATE User SET sleep_goal = %s WHERE user_id = %s""",
+        (sleep_goal, user_id)
+    )
+    connection.commit()
+    cursor.close()
+    connection.close()
+    return jsonify({"message": "Sleep goal updated"}), 200
 
 
 @app.route("/sleep_data", methods=["GET"])
@@ -232,9 +256,6 @@ def goal_progress():
     except Exception as e:
         print("ERROR IN /goal_progress:", e)
         return jsonify({"error": str(e)}), 500
-
-
-
 
 # ---- Google Login ---- #
 @app.route("/google-login", methods=["POST"])

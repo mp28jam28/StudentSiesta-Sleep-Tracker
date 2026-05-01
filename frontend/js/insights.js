@@ -31,9 +31,17 @@ slider.addEventListener("input", () => {
     updateTips(slider.value);
 })
 
-button.addEventListener("click", () => {
+button.addEventListener("click", async () => {
     const goal = slider.value;
     localStorage.setItem("sleepGoal", goal);
+    
+    await fetch("http://127.0.0.1:5000/update_sleep_goal", {
+        "method": "POST",
+        "headers": {"Content-Type" :"application/json"},
+        credentials: "include",
+        body: JSON.stringify({sleep_goal: goal})
+    });
+
     statusMessage.innerHTML = "Congrats! Your new sleep goal is: " + goal + " hours</span>";
     console.log("Goal set to " + goal + "!")
 })

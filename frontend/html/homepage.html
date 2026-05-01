@@ -3,7 +3,8 @@
 <head>
     <title>StudentSiesta</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">                              
-    <link rel="stylesheet" href="/frontend/css/sleep_tracker.css">
+    <!--<link rel="stylesheet" href="/frontend/css/sleep_tracker.css">-->
+    <link rel="stylesheet" href="/css/sleep_tracker.css">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans&display=swap" rel="stylesheet">                                     
 </head>
 <body>
@@ -25,9 +26,19 @@
             <p class="value" id="sleepDebtValue">-- hrs</p>
         </div>
 
-        <div class="card">
-            <h4>Weekend Recovery</h4>
-            <p class="value" id="weekendRecoveryValue">-- hrs</p>
+       <div class="card goal-progress-card">
+          <h4>Your Progress vs. Goal</h4>
+
+           <div class="goal-progress-box">
+             <p class="goal-label">Avg Last Week</p>
+             <p class="goal-value" id="goalAvgValue">-- hrs</p>
+
+            <div class="goal-bar">
+            <div class="goal-fill" id="goalFill"></div>
+         </div>
+
+          <p class="goal-percent" id="goalPercent">--% of goal</p>
+          </div>
         </div>
 
         <div class="card">
@@ -55,6 +66,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../js/sleep_tracker.js"></script>
     <script src="/js/logout.js"></script>
-    <script src="/frontend/js/sleep_tracker.js"></script>
+    <!--<script src="/frontend/js/sleep_tracker.js"></script>-->
 </body>
 </html>

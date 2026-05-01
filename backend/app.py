@@ -186,6 +186,56 @@ def get_sleep_data():
         return jsonify({"error": str(e)}), 500
 
 
+@app.route("/goal_progress", methods=["GET"])
+def goal_progress():
+    user = session.get("user")
+    if not user:
+        return jsonify({"error": "Not logged in"}), 401
+
+    user_id = user["user_id"]
+
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT sleep_goal
+            FROM User
+            WHERE user_id = %s
+        """, (user_id,))
+        user_row = cursor.fetchone()
+
+        sleep_goal = user_row["sleep_goal"] if user_row and user_row["sleep_goal"] else 9
+
+        cursor.execute("""
+            SELECT AVG(duration_hours) AS avg_sleep
+            FROM Sleep_Log
+            WHERE user_id = %s
+              AND log_date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+        """, (user_id,))
+        sleep_row = cursor.fetchone()
+
+        avg_sleep = sleep_row["avg_sleep"] if sleep_row["avg_sleep"] else 0
+        print("AVG QUERY RESULT:", avg_sleep)
+        
+        percent = round((float(avg_sleep) / float(sleep_goal)) * 100)
+
+        cursor.close()
+        connection.close()
+
+        return jsonify({
+            "avg_sleep": round(float(avg_sleep), 1),
+            "sleep_goal": float(sleep_goal),
+            "percent": min(percent, 100)
+        }), 200
+
+    except Exception as e:
+        print("ERROR IN /goal_progress:", e)
+        return jsonify({"error": str(e)}), 500
+
+
+
+
 # ---- Google Login ---- #
 @app.route("/google-login", methods=["POST"])
 def google_login():

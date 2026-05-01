@@ -252,8 +252,31 @@ if (nextWeekBtn) {
     });
 }
 
+
+async function updateGoalProgress() {
+    try {
+        const res = await fetch("/goal_progress", {
+            credentials: "include"
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.error || "Failed to load goal progress");
+        }
+
+        document.getElementById("goalAvgValue").textContent = `${data.avg_sleep} hrs`;
+        document.getElementById("goalPercent").textContent = `${data.percent}% of goal`;
+        document.getElementById("goalFill").style.width = `${data.percent}%`;
+
+    } catch (err) {
+        console.error("Goal progress error:", err);
+    }
+}
+
 // ---------- initial load ----------
 document.addEventListener("DOMContentLoaded", function () {
     updateChart();
     updateChronotype();
+    updateGoalProgress();
 });

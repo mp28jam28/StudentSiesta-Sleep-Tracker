@@ -274,9 +274,109 @@ async function updateGoalProgress() {
     }
 }
 
+// ---------- Upcoming events logic ----------
+function renderUpcomingEvents(events) {
+    const container = document.getElementById("upcomingEvents");
+    container.innerHTML = "";
+
+    const today = new Date();
+
+    const upcoming = events
+        .flatMap(e => {
+            if (e.event_type !== "class" || !e.days || !e.start_time) {
+                return [];
+            }
+
+            const days = e.days.split(",");
+
+            return days.map(day => {
+                const date = getNextWeekday(day, e.start_time);
+                return {...e, parsedDate: date, displayDay: day};
+            });
+        })
+        .concat(
+            events
+            .filter(e => e.event_type === "exam" && e.exam_date)
+            .map(e => ({...e, parsedDate: new Date(e.exam_date)}))
+        )
+        .filter(e => e.parsedDate >= new Date())
+        .sort((a, b) => a.parsedDate - b.parsedDate)
+        .slice(0, 4);
+    
+    upcoming.forEach(event => {
+        const div = document.createElement("div");
+        div.classList.add("event-card");
+
+        const formattedDate = event.parsedDate.toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric"
+        });
+
+        const type = event.event_type;
+
+        div.innerHTML = `
+            <div class="event-left">
+                <div class="dot ${type === "exam" ? "red" : "yellow"}"></div>
+                <div>
+                    <div class="event-title">${type === "class" ? `${event.start_time.split(":").slice(0, 2).join(":")} - ` : ""}${event.class_name}</div>
+                    <div class="event-date">${formattedDate}</div>
+                </div>
+            </div>
+
+            <div class="badge ${type === "exam" ? "red" : "yellow"}">${type === "exam" ? "Exam" : "Early Class"}</div>
+        `;
+
+        container.appendChild(div);
+    });
+}
+
+function getNextWeekday(dayStr, timeStr) {
+    const dayMap = {Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6};
+    const targetDay = dayMap[dayStr];
+
+    const result = new Date();
+
+    const currentDay = result.getDay();
+    let diff = targetDay - currentDay;
+
+    if (diff < 0 || (diff === 0 && isTimePast(timeStr))) {
+        diff += 7;
+    }
+
+    result.setDate(result.getDate() + diff);
+
+    const [h, m, s] = timeStr.split(":").map(Number);
+    result.setHours(h, m, s || 0, 0);
+
+    return result;
+}
+
+function isTimePast(timeStr) {
+    const [h, m] = timeStr.split(":").map(Number);
+    const now = new Date();
+
+    return (
+        now.getHours() > h ||
+        (now.getHours() === h && now.getMinutes() > m)
+    );
+}
+
+async function loadEvents() {
+    const response = await fetch("http://127.0.0.1:5000/get_events", {
+        credentials: "include"
+    });
+
+    const events = await response.json();
+    
+    console.log("Events:", events);
+
+    renderUpcomingEvents(events);
+}
+
 // ---------- initial load ----------
 document.addEventListener("DOMContentLoaded", function () {
     updateChart();
     updateChronotype();
     updateGoalProgress();
+    loadEvents();
 });

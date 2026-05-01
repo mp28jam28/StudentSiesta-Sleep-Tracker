@@ -253,7 +253,7 @@ function renderEvents(events) {
                     el.style.borderRadius = "5px";
                     el.style.padding = "2px";
 
-                    el.textContent = `${event.start_time.slice(0,5)} ${event.class_name}`;
+                    el.textContent = `${event.start_time.split(":").slice(0, 2).join(":")} ${event.class_name}`;
 
                     cell.appendChild(el);
                 });
@@ -298,7 +298,7 @@ function renderClassList(events) {
             <div class="class-left">
                 <div class="class-info">
                     <div class="class-title">${event.class_name}</div>
-                    <div class="class-days">${event.days} at ${event.start_time.slice(0,5)}</div>
+                    <div class="class-days">${event.days} at ${event.start_time.split(":").slice(0, 2).join(":")}</div>
                 </div>
             </div>
             <button class="delete-btn" data-id="${event.event_id}">🗑️</button>

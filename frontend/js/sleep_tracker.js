@@ -79,14 +79,14 @@ function toggleChronoBanner() {
 async function updateChronotype() {
     const value = document.getElementById("chronotypeValue");
     const descriptions = {
-        "Lion 🦁" : "According to your chronotype, you're an early riser . You fall asleep early and naturally embrace the mornings. Peak focus in the morning is common for lions.<br>" +
-                    "Sleep tip 💡: Take a power nap & energize in the afternoon.",
-        "Bear 🐻" : "Your sleep follows the sun. You feel most productive mid-morning and tend to hit an afternoon slump. <br>" + 
-                    "Sleep tip 💡: Get 8 hours of sleep to stay active the next day.",
+        "Lion 🦁" : "According to your chronotype, you're an early riser. You fall asleep early and naturally embrace the mornings. Peak focus in the morning is common for lions ☀️✨<br>" +
+                    "<span style='color: lightgray'>Sleep tip 💡: Take a power nap & energize in the afternoon.</span>", 
+        "Bear 🐻" : "According to your chronotype, your sleep follows the sun. You feel most productive mid-morning and tend to hit an afternoon slump.<br>" + 
+                    "<span style='color: lightgray'>Sleep tip 💡: Get 8 hours of sleep to stay active the next day.</span>",
         "Wolf 🐺" : "According to your chronotype, you are naturally active a night. It is difficult to wake up early while your energy really kicks in during the evening. <br>" +
-                    "Sleep tip 💡: Give yourself permission to get more rest—8 to 10 hours can work well for you!",
-        "Dolphin 🐬" : "You're an light, irregular sleeper. You often lack momentum but have spontaneous bursts of energy throughout the day. <br>" +
-                    "Sleep tip 💡: Unwind before bedtime to avoid anxious thoughts."
+                    "<span style='color: lightgray'>Sleep tip 💡: Give allow yourself to get more rest—8 to 10 hours can work well for you!</span>",
+        "Dolphin 🐬" : "According to your chronotype, you're an light, irregular sleeper. You often lack momentum but have spontaneous bursts of energy throughout the day. <br>" +
+                    "<span style='color: lightgray'>Sleep tip 💡: Unwind before bedtime to avoid anxious thoughts.</span>"
     };
 
     let desc = document.getElementById("chronotypeDesc");

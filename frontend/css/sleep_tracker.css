@@ -181,19 +181,6 @@ button:hover {
       margin-bottom: 16px;
   }
 
-.chronotype-description {
-      /* color: rgb(196, 199, 219); */
-      color: rgb(31, 37, 53);
-      font-size: 27px;
-      margin-bottom: 16px;
-      font-family:'DM Sans';
-      line-height: 2.7;
-      margin: 60px;
-      text-align: center;
-      font-style: bold;
-      font-weight: 500;
-      /* font-family:'Space Mono',monospace; */
-  }
 .about-chrono {
     font-size: xx-large;
     color: rgb(24, 17, 69);
@@ -242,10 +229,8 @@ button:hover {
     font-size: 13px;
     margin-top: 4px;
 }
-
 .sleep-tips {
     padding: 20px;
-    /* background: rgb(8, 1, 56); */
     background: #141055;
     width: 700px;
     margin: 20px auto;
@@ -346,15 +331,23 @@ button:hover {
     border-radius: 129px;
     box-shadow: 0 4px 10px white;
     color: white;
-    max-width: 1300px;
+    max-width: 900px;
 }
 
-.goal-progress-card {
-    
+.chronotype-description {
+      color: rgb(31, 37, 53);
+      font-size: 19px;
+      margin-bottom: 16px;
+      font-family:'DM Sans';
+      line-height: 2.7;
+      margin: 60px;
+      text-align: center;
+      font-style: bold;
+      font-weight: 500;
 }
 
 .goal-progress-box {
-    background: #6e14ff;
+    background: #0f057a;
     border: 1px solid rgba(255,255,255,0.12);
     border-radius: 8px;
     padding: 14px;
@@ -363,8 +356,9 @@ button:hover {
 }
 
 .goal-label {
-    color: #e4e1e1;
+    color: gray;
     font-size: 12px;
+    font-family: 'DM sans';
     margin: 0;
 }
 
@@ -377,7 +371,7 @@ button:hover {
 
 .goal-bar {
     height: 6px;
-    background: rgba(235, 38, 38, 0.18);
+    background: rgba(192, 81, 81, 0.18);
     border-radius: 999px;
     overflow: hidden;
 }
@@ -385,11 +379,11 @@ button:hover {
 .goal-fill {
     height: 100%;
     width: 80%;
-    background: rgb(255, 196, 69);
+    background: #928fd9;
 }
 
 .goal-percent {
-    color: #f3ecec;
+    color: lightgray;
     font-size: 12px;
     margin: 6px 0 0;
 }

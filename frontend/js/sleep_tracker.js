@@ -394,6 +394,48 @@ async function loadEvents() {
     renderUpcomingEvents(events);
 }
 
+async function loadAverageBedtime() {
+    try {
+        const response = await fetch("http://127.0.0.1:5000/average_bedtime", {
+            credentials: "include"
+        });
+        const result = await response.json();
+        if (result.average_bedtime) {
+            document.getElementById("avg-bedtime").textContent = result.average_bedtime;
+        }
+    } catch (error) {
+        console.error("Error loading average bedtime:", error);
+    }
+}
+
+async function loadAverageWakeTime() {
+    try {
+        const response = await fetch("http://127.0.0.1:5000/average_wake_time", {
+            credentials: "include"
+        });
+        const result = await response.json();
+        if (result.average_wake_time) {
+            document.getElementById("avg-wake-time").textContent = result.average_wake_time;
+        }
+    } catch (error) {
+        console.error("Error loading average wake time:", error);
+    }
+}
+
+async function loadAverageSleepDuration() {
+    try {
+        const response = await fetch("http://127.0.0.1:5000/average_sleep_duration", {
+            credentials: "include"
+        });
+        const result = await response.json();
+        if (result.average_sleep_duration) {
+            document.getElementById("avg-sleep-duration").textContent = result.average_sleep_duration;
+        }
+    } catch (error) {
+        console.error("Error loading average sleep duration:", error);
+    }
+}
+
 // ---------- initial load ----------
 document.addEventListener("DOMContentLoaded", function () {
     loadSleepDebt();
@@ -401,4 +443,7 @@ document.addEventListener("DOMContentLoaded", function () {
     updateChronotype();
     updateGoalProgress();
     loadEvents();
+    loadAverageBedtime();
+    loadAverageWakeTime();
+    loadAverageSleepDuration();
 });

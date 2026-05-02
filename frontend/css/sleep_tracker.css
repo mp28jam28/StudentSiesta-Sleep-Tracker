@@ -11,7 +11,7 @@ body {
 .cards {
     display: flex;
     gap: 17px;
-    padding: 20px;
+    padding: 15px;
     /* scale: .5; */
     /* padding-bottom: 0px; */
 }
@@ -53,7 +53,7 @@ body {
     }
 
 .charts {
-    margin: 20px;
+    margin: 15px;
     background: rgb(8, 1, 56);
     padding: 20px;
     border-radius: 12px;
@@ -197,6 +197,7 @@ button:hover {
       color: #aaa;
       font-size: 14px;
       margin-bottom: 16px;
+      text-align: center;
   }
 
 .about-chrono {
@@ -262,7 +263,10 @@ button:hover {
     border-radius: 12px;
     padding: 24px;
     text-align: center;
-    margin: 16px 0;
+    margin: 120px auto 90px;
+    max-width: 425px;
+    max-height: 1000px;
+    scale:1.3;
 }
 
 .bedtime-label {
@@ -316,26 +320,26 @@ button:hover {
     gap: 15px;
     padding: 20px;
     background: rgb(8, 1, 56);
-    width: 700px;
-    margin: 20px auto;
+    width: 915px;
+    margin: 28px auto 30px;
     border-radius: 12px;
-    box-shadow: 0 4px 10px white;
-    color: white;
+    box-shadow: 0 .5px 5px white;
+    color: lightgray;
 }
 
 .small-bubble-banner {
     flex: 1;
-    background: rgb(60, 20, 100);
+    background:rgb(15, 10, 70); /*linear-gradient(221deg, rgb(15, 10, 70), rgb(60, 20, 100));*/
+    border: 1px solid rgba(255,255,255,0.12);
     border-radius: 12px;
     text-align: left;
     padding: 16px;
-    font-weight: bold;
 }
 
 .chronotype-stats {
-    font-size: 28px;
+    font-size: 36px;
     margin-top: 8px;
-    color: #7b6ef6
+    color: rgb(215, 208, 71)
 }
 
 .chrono-banner {
@@ -345,7 +349,6 @@ button:hover {
     overflow: hidden;
     transition: opacity 0.5s ease, max-height 0.5s ease, margin 0.5s ease;
     margin: 0 auto;
-    margin: 20px auto;
     background: linear-gradient(to top, #505776, #429188);
     padding: 20px;
     border-radius: 129px;

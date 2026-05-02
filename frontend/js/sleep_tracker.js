@@ -308,6 +308,12 @@ function renderUpcomingEvents(events) {
                 return [];
             }
 
+            const [hour, minute] = e.start_time.split(":").map(Number);
+
+            if (hour > 9 || (hour === 9 && minute > 0)) {
+                return [];
+            }
+
             const days = e.days.split(",");
 
             return days.map(day => {

@@ -78,9 +78,10 @@ nav a {
     text-decoration: none;
 }
 
-nav a:last-child {
+.nav-right {
     margin-left: auto;
-    margin-right: 20px;
+    display: flex;
+    gap: 10px;
 }
 
 h1 {

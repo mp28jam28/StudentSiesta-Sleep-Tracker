@@ -266,10 +266,16 @@ async function updateGoalProgress() {
         if (!res.ok) {
             throw new Error(data.error || "Failed to load goal progress");
         }
+        let goalPercentage = document.getElementById("goalPercent")
 
         document.getElementById("goalAvgValue").textContent = `${data.avg_sleep} hrs`;
-        document.getElementById("goalPercent").textContent = `${data.percent}% of goal`;
+        goalPercentage.textContent = `${data.percent}% of your sleep goal!`;
+        if (data.percent == 100) {
+            goalPercentage.textContent += " 🎉";
+        } 
         document.getElementById("goalFill").style.width = `${data.percent}%`;
+
+
 
     } catch (err) {
         console.error("Goal progress error:", err);

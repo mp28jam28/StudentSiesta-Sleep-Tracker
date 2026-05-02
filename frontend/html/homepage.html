@@ -20,6 +20,11 @@
         <button class="tab" id="logoutBtn">Logout</button>
     </nav>
 
+    <section class="upcoming-events">
+        <h4 style="text-align: center; font-size: 22px;">Upcoming High-Stakes Events 🚨</h4>
+        <div id="upcomingEvents"></div>
+    </section>
+
     <section class="cards">
         <div class="card">
             <h4>Sleep Debt</h4>
@@ -30,7 +35,7 @@
           <h4>Your Progress vs. Goal</h4>
 
            <div class="goal-progress-box">
-             <p class="goal-label">Avg Last Week</p>
+             <p class="goal-label">7-Day Avg Sleep</p>
              <p class="goal-value" id="goalAvgValue">hrs</p>
 
             <div class="goal-bar">
@@ -60,12 +65,6 @@
             <button id="nextWeek">→</button>
         </div>
         <canvas id="sleepChart"></canvas>
-    </section>
-
-    <section class="upcoming-events">
-        <h4>Upcoming High-Stakes Events</h4>
-        <div id="upcomingEvents"></div>
-        <p>💡 Consider getting extra rest before these events</p>
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

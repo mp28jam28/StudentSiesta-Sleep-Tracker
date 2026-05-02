@@ -59,6 +59,18 @@ if (sleepData) {
     });
 }
 
+// ---------- Sleep Debt Logic ----------
+async function loadSleepDebt() {
+    const response = await fetch("http://127.0.0.1:5000/sleep_debt", {
+        credentials: "include"
+    });
+
+    const data = await response.json();
+
+    document.getElementById("sleepDebtValue").textContent = data.sleep_debt + " hrs";
+    document.getElementById("sleepDebtValue").className = data.sleep_debt > 0 ? "bad" : "good";
+}
+
 function toggleChronoBanner() {
     const banner = document.querySelector(".chrono-banner");
     const btn = document.getElementById("learnMoreBtn");
@@ -384,6 +396,7 @@ async function loadEvents() {
 
 // ---------- initial load ----------
 document.addEventListener("DOMContentLoaded", function () {
+    loadSleepDebt();
     updateChart();
     updateChronotype();
     updateGoalProgress();

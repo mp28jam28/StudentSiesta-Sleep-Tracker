@@ -25,6 +25,18 @@ body {
     color: white;
 }
 
+.bad {
+    font-size: 24px;
+    font-weight: bold;
+    color: red;
+}
+
+.good {
+    font-size: 24px;
+    font-weight: bold;
+    color: rgb(25, 189, 25);
+}
+
 .value {
     font-size: 24px;
     font-weight: bold;
@@ -401,7 +413,7 @@ button:hover {
     margin-bottom: 5px;
     background: linear-gradient(321, #2668b1, #201655);
     padding: 20px;
-    color: white; 
+    color: white;
     max-width: 707px;
     /* display: center; */
 }

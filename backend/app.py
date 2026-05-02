@@ -16,6 +16,7 @@ from calculation.duration import calculate_duration_hours
 from calculation.average_bedtime import calculate_average_bedtime
 from calculation.average_waketime import calculate_average_waketime
 from calculation.average_sleep_duration import calculate_average_sleep_duration
+from calculation.sleep_debt import calculate_sleep_debt
 
 from werkzeug.security import generate_password_hash
 from dotenv import load_dotenv
@@ -731,7 +732,39 @@ def average_sleep_duration():
             return jsonify({"average_sleep_duration": None})
 
         return jsonify({"average_sleep_duration": avg_time}), 200
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route("/sleep_debt", methods=["GET"])
+def sleep_debt():
+    user = session.get("user")
+    if not user:
+        return jsonify({"error": "Not logged in"}), 401
 
+    user_id = user["user_id"]
+
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
+
+        cursor.execute(
+            """SELECT duration_hours FROM Sleep_Log WHERE user_id = %s AND log_date >= NOW() - INTERVAL 7 DAY""", (user_id,)
+        )
+        rows = cursor.fetchall()
+
+        cursor.execute(
+            """SELECT sleep_goal FROM User WHERE user_id = %s""", (user_id,)
+        )
+        goal = cursor.fetchone()
+
+        cursor.close()
+        connection.close()
+
+        debt = calculate_sleep_debt(rows, goal)
+
+        return jsonify({"sleep_debt": debt}), 200
+    
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 

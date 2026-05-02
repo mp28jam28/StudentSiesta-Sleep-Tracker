@@ -225,6 +225,7 @@ def goal_progress():
         connection = get_db_connection()
         cursor = connection.cursor(dictionary=True)
 
+        # Get sleep goal from database
         cursor.execute("""
             SELECT sleep_goal
             FROM User
@@ -234,6 +235,7 @@ def goal_progress():
 
         sleep_goal = user_row["sleep_goal"] if user_row and user_row["sleep_goal"] else 9
 
+        # Calculate the user's average sleep hours 
         cursor.execute("""
             SELECT AVG(duration_hours) AS avg_sleep
             FROM Sleep_Log

@@ -257,7 +257,7 @@ if (nextWeekBtn) {
 
 async function updateGoalProgress() {
     try {
-        const res = await fetch("/goal_progress", {
+        const res = await fetch("http://127.0.0.1:5000/goal_progress", {
             credentials: "include"
         });
 
@@ -273,6 +273,7 @@ async function updateGoalProgress() {
 
     } catch (err) {
         console.error("Goal progress error:", err);
+        document.getElementById("goalAvgValue").textContent = data.avg_sleep ?? "-- hrs";
     }
 }
 

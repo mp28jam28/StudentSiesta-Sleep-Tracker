@@ -25,7 +25,7 @@
             <div class="bedtime-wake" id="wake-suggestion">to wake up at .....? </div>
     </div>
 
-
+    <!-- <div style="display:flex;"> -->
      <div id="sleep-goal-setter" class="goal-setter">
         <h3>Daily Sleep Goal</h3>
             <div class="goal-description">How many hours would you like to sleep?</div>
@@ -58,15 +58,15 @@
      <div id="wake-up-goal-setter" class="goal-setter">
     <h3>Preferred Wake-Up Time</h3>
     <div class="goal-description">When would you like to wake up each day?</div>
-       <div class="scroll-container" style ="justify-content:center;">
-        <input type="time" id="wakeUpInput" value="08:00" style="opacity: .77; max-width: 200px;">
-        <div class="preferred-hours" id="wake-up-display">8:00 AM</div>
+       <div class="scroll-container" style ="justify-content:center; margin-top: 59px; margin-bottom: 50px">
+        <input type="time" id="wakeUpInput" value="08:00" style="opacity: .77; max-width: 350px;scale:1.42">
        </div>
        <button type="button" id="setWakeUpBtn">Set Wake-Up Time</button>
        <p class="goalStatusMessage" id="wakeStatusMessage"></p>
     </div>
+    <!-- </div> -->
 
-
+<!-- 
     <div class="sleep-tips">
         <h3>Tips to Reach Your <span id="tips-goal">8</span> - Hour Goal 🌙</h3>
         <ul class="tips-list">
@@ -75,7 +75,7 @@
             <li>Keep your room cool (65-68°F) and dark</li>
             <li>Limit caffeine after 2 PM</li> 
         </ul>
-    </div>
+    </div> -->
 
     <script src="../js/insights.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>

@@ -16,7 +16,8 @@ class Schema:
                 email VARCHAR(255),
                 password VARCHAR(255) NOT NULL,
                 sleep_goal FLOAT,
-                chronotype VARCHAR(50) 
+                wake_up_goal TIME,
+                chronotype VARCHAR(50)
             )
         """)
 

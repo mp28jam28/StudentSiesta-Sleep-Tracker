@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const data = await wakeRes.json();
             if (data.wake_up_goal) {
                 wakeUpInput.value = data.wake_up_goal;
-                wakeUpDisplay.textContent = formatTimeDisplay(data.wake_up_goal);
+                if (wakeUpDisplay) wakeUpDisplay.textContent = formatTimeDisplay(data.wake_up_goal);
                 const [h, m] = data.wake_up_goal.split(":").map(Number);
                 savedWakeUpMinutes = h * 60 + m;
             }

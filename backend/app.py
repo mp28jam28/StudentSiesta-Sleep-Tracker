@@ -213,6 +213,59 @@ def get_sleep_data():
         print("ERROR IN /sleep_data:", e)
         return jsonify({"error": str(e)}), 500
 
+@app.route("/update_wake_up_goal", methods=["POST"])
+def update_wake_up_goal():
+    user = session.get("user")
+    if not user:
+        return jsonify({"error": "Not logged in"}), 401
+
+    data = request.get_json()
+    wake_up_goal = data.get("wake_up_goal")
+    if not wake_up_goal:
+        return jsonify({"error": "wake_up_goal is required"}), 400
+
+    user_id = user["user_id"]
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    cursor.execute(
+        "UPDATE User SET wake_up_goal = %s WHERE user_id = %s",
+        (wake_up_goal, user_id)
+    )
+    connection.commit()
+    cursor.close()
+    connection.close()
+    return jsonify({"message": "Wake up goal updated"}), 200
+
+
+@app.route("/get_wake_up_goal", methods=["GET"])
+def get_wake_up_goal():
+    user = session.get("user")
+    if not user:
+        return jsonify({"error": "Not logged in"}), 401
+
+    user_id = user["user_id"]
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute(
+        "SELECT wake_up_goal FROM User WHERE user_id = %s",
+        (user_id,)
+    )
+    row = cursor.fetchone()
+    cursor.close()
+    connection.close()
+
+    wake_up_str = None
+    if row and row["wake_up_goal"] is not None:
+        td = row["wake_up_goal"]
+        total_seconds = int(td.total_seconds())
+        hours = (total_seconds // 3600) % 24
+        minutes = (total_seconds % 3600) // 60
+        wake_up_str = f"{hours:02}:{minutes:02}"
+
+    return jsonify({"wake_up_goal": wake_up_str}), 200
+
+
+
 
 @app.route("/goal_progress", methods=["GET"])
 def goal_progress():

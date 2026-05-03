@@ -44,7 +44,6 @@ if (sleepData) {
                 alert(`Sleep logged successfully. Duration: ${result.duration_hours} hours`);
             }
 
-            // refresh chart if this JS is also loaded on homepage
             updateChart();
         } catch (error) {
             console.error("Error saving sleep data:", error);
@@ -112,7 +111,7 @@ async function updateChronotype() {
             credentials: "include"
         });
         if (!response.ok) throw new Error("not ok");
-        const data = await response.json();             // Returns either Lion, Wolf, Dolphin
+        const data = await response.json();
         value.textContent = data.chronotype ?? "--";
 
         const label = document.getElementById("chronotypeLabel");
@@ -149,40 +148,42 @@ async function updateChart() {
     );
 
     let sleepEntries = [];
+    let sleepGoal = 8; // fallback if user hasn't set one
 
     try {
         console.time("chartFetch");
-        const response = await fetch("http://127.0.0.1:5000/sleep_data",{
-            credentials:"include"
-        });
+        const [sleepRes, goalRes] = await Promise.all([
+            fetch("http://127.0.0.1:5000/sleep_data", { credentials: "include" }),
+            fetch("http://127.0.0.1:5000/goal_progress", { credentials: "include" })
+        ]);
         console.timeEnd("chartFetch");
 
-        if (!response.ok) {
-            throw new Error(`Backend returned ${response.status}`);
+        if (sleepRes.ok) sleepEntries = await sleepRes.json();
+        if (goalRes.ok) {
+            const goalData = await goalRes.json();
+            if (goalData.sleep_goal) sleepGoal = goalData.sleep_goal;
+        }
+    } catch (error) {
+        console.error("Failed to fetch chart data:", error);
+    }
+
+    const hoursSlept = weekDates.map(d => {
+        const yyyyMmDd = d.toLocaleDateString("en-CA");
+
+        const entriesForDay = sleepEntries.filter(item => {
+            return String(item.date).split("T")[0] === yyyyMmDd;
+        });
+
+        if (entriesForDay.length === 0) {
+            return null;
         }
 
-        sleepEntries = await response.json();
-        
-    } catch (error) {
-        console.error("Failed to fetch sleep data:", error);
-        sleepEntries = [];
-    }
-    
-   const hoursSlept = weekDates.map(d => {
-    const yyyyMmDd = d.toLocaleDateString("en-CA");
-
-    const entriesForDay = sleepEntries.filter(item => {
-        return String(item.date).split("T")[0] === yyyyMmDd;
+        // If multiple sleep logs exist for the same day, use the most recent one
+        return entriesForDay[entriesForDay.length - 1].duration_hours;
     });
 
-    if (entriesForDay.length === 0) {
-        return null;
-    }
-
-    // !!! If multiple sleep logs exist for the same day,
-    // use the most recent one returned from the backend
-    return entriesForDay[entriesForDay.length - 1].duration_hours;
-});
+    // Flat dashed line at the user's sleep goal
+    const goalLine = labels.map(() => sleepGoal);
 
     const weekTitle = document.getElementById("weekTitle");
     if (weekTitle) {
@@ -201,23 +202,37 @@ async function updateChart() {
         type: "line",
         data: {
             labels: labels,
-            datasets: [{
-                label: "Hours Slept",
-                data: hoursSlept,
-                tension: 0,
-                fill: true,
-                borderColor: "#ffffff",
-                backgroundColor: "rgba(255, 255, 255, 0.15)",
-                pointBackgroundColor: "#ffcc00",
-                pointBorderColor: "#ffcc00",
-                pointRadius: 5,
-                borderWidth: 3
-            }]
+            datasets: [
+                {
+                    label: "Hours Slept",
+                    data: hoursSlept,
+                    tension: 0,
+                    fill: true,
+                    borderColor: "#ffffff",
+                    backgroundColor: "rgba(255, 255, 255, 0.15)",
+                    pointBackgroundColor: "#ffcc00",
+                    pointBorderColor: "#ffcc00",
+                    pointRadius: 5,
+                    borderWidth: 3
+                },
+                {
+                    label: `Sleep Goal (${sleepGoal} hrs)`,
+                    data: goalLine,
+                    borderColor: "#e8e168",
+                    backgroundColor: "transparent",
+                    borderDash: [8, 6],
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    fill: false,
+                    tension: 0
+                }
+            ]
         },
         options: {
             plugins: {
                 legend: {
-                    display: false
+                    display: true,
+                    labels: { color: "white" }
                 }
             },
             scales: {
@@ -287,11 +302,9 @@ async function updateGoalProgress() {
         } 
         document.getElementById("goalFill").style.width = `${data.percent}%`;
 
-
-
     } catch (err) {
         console.error("Goal progress error:", err);
-        document.getElementById("goalAvgValue").textContent = data.avg_sleep ?? "-- hrs";
+        document.getElementById("goalAvgValue").textContent = "-- hrs";
     }
 }
 

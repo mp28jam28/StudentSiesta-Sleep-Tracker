@@ -46,6 +46,7 @@ button.addEventListener("click", async () => {
     console.log("Goal set to " + goal + "!")
 })
 
+// ---- Wake-up goal logic ----
 const wakeUpInput = document.getElementById("wakeUpInput");
 const wakeUpDisplay = document.getElementById("wake-up-display");
 const wakeUpBtn = document.getElementById("setWakeUpBtn");

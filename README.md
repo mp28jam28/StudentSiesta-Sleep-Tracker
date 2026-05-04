@@ -19,9 +19,51 @@ students may oversleep on weekends
 sleep trends mapped against the academic calendar 
 midterms week, finals week, spring break recovery, work schedule 
 
+                                                                                                                           
+  ## How to Run Locally                                                                                                                                      
+                                                                                                                                                             
+  ### Prerequisites                                                                                                                                          
+  - Python 3.10+                                                                                                                                             
+  - A MySQL database (local or Cloud SQL)                                                                                                                  
+  - A Google Cloud project with an OAuth 2.0 client ID (for Google sign-in)
+                                                                                                                                                                                                                                                                                     
+## How to Run Locally                                                                                                                                      
+                                                                                                                                                             
+  ### Prerequisites                                                                                                                                          
+  - Python 3.10+                                                                                                                                             
+  - A MySQL database (local or Cloud SQL)                                                                                                                    
+  - A Google Cloud project with an OAuth 2.0 client ID (for Google sign-in)                                                                                  
+                                                                                                                                                             
+  ### 1. Install dependencies
+  ```                                                                                                                                                        
+  pip install -r requirements.txt                                                                                                                          
+  ```
 
-## Project Setup Environment
-The project environment will be simulated through the Google Cloud system, utilizing its existing services and modules.
+  ### 2. Configure environment variables
+  Create a `.env` file inside the `backend/` directory:
+  ```
+  DB_HOST=<your_database_host>
+  DB_USER=<your_database_user>
+  DB_PASSWORD=<your_database_password>                                                                                                                       
+  DB_NAME=studentsiesta
+  APP_SECRET_KEY=<your_secret_key>                                                                                                                           
+  ```                                                                                                                                                      
+
+  ### 3. Set up the database
+  ```
+  cd backend
+  python schema.py
+  ```                                                                                                                                                        
+   
+  ### 4. Start the backend                                                                                                                                   
+  ```                                                                                                                                                      
+  cd backend
+  python app.py
+  ```
+  The Flask server will start at `http://127.0.0.1:5000`.
+
+  ### 5. Open the app
+  Navigate to `http://127.0.0.1:5000/login` in your browser.
 
 To run it locally, first install the required dependencies by running this command in the terminal.
 `bash pip install -r requirements.txt`
